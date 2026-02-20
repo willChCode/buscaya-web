@@ -1,6 +1,8 @@
 <template>
-  <div class="-mx-4 md:-mx-6 px-3 md:px-6 flex justify-between py-5 bg-gray-100 transition-all duration-300">
-    <div class="px-4 md:px-0 flex justify-between w-full">
+  <div
+    class="px-4 md:px-6 flex justify-between py-5 bg-gray-100 transition-all duration-300 w-full overflow-hidden shrink-0"
+  >
+    <div class="flex justify-between w-full">
       <span class="flex gap-2 justify-center items-center">
         <h1 class="text-xl font-bold">{{ pageTitle }}</h1>
         <p class="text-lg text-gray-700 mt-[1px] hidden md:block">
@@ -60,17 +62,20 @@
     </div>
   </div>
 
-  <div class="py-4">
+  <div class="py-4 w-full max-w-full overflow-hidden">
     <!-- Loading State -->
     <div
       v-if="store.cargando"
-      class="grid gap-2 md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-3 md:px-0"
+      class="grid gap-2 md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-3 md:px-6"
     >
       <BusinessSkeleton v-for="n in 8" :key="n" class="w-full mx-auto" />
     </div>
 
     <!-- Empty State (Only if not loading) -->
-    <div v-else-if="store.negociosFitlrados?.length === 0" class="text-center py-10">
+    <div
+      v-else-if="store.negociosFitlrados?.length === 0"
+      class="text-center py-10 px-4 md:px-6"
+    >
       <p>No se encontraron resultados para tu búsqueda.</p>
     </div>
 
@@ -78,7 +83,7 @@
     <div
       v-else
       v-if="store.negociosFitlrados?.length > 0"
-      class="grid gap-[6px] md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-[9px] md:px-0"
+      class="grid gap-[6px] md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-[9px] md:px-6"
     >
       <component
         :is="getCardComponent(negocio)"
@@ -109,11 +114,11 @@ import DrawerFiltro from '~/components/DrawerFiltro.vue';
 import BusinessSkeleton from '~/components/BusinessSkeleton.vue';
 
 const getCardComponent = (negocio: any) => {
-    const plan = negocio.membresia?.plan?.toLowerCase();
-    if (plan === 'premium' || plan === 'gold') {
-        return CardPremium;
-    }
-    return Card;
+  const plan = negocio.membresia?.plan?.toLowerCase();
+  if (plan === 'premium' || plan === 'gold') {
+    return CardPremium;
+  }
+  return Card;
 };
 
 const route = useRoute();
@@ -122,7 +127,7 @@ const store = useUbicacionNegocios();
 const selectedNegocio = ref<any>(null);
 
 definePageMeta({
-    paddingClass: 'px-0 md:px-6'
+  paddingClass: 'px-0',
 });
 const isOpen = ref(false);
 const isFilterOpen = ref(false);
@@ -167,7 +172,7 @@ const coincide = (fuente: any, terminoLimpio: string) => {
 
 // --- Lógica Principal ---
 const handleApplyFilters = async () => {
-  await store.actualizarDatos(true); 
+  await store.actualizarDatos(true);
   // handleFilter(); // Ya no es necesario filtrar localmente si confiamos en el backend
 };
 
@@ -179,23 +184,23 @@ const handleSeeAll = async () => {
 
 const handleFilter = async () => {
   store.lastFilterQuery = JSON.parse(JSON.stringify(route.query));
-  
-  const search = route.query.search as string || '';
-  
+
+  const search = (route.query.search as string) || '';
+
   // Update store filter
   if (store.filtros.search !== search) {
-      store.setFiltros({ search });
-      // Trigger fetch because search changed
-      await store.actualizarDatos(true);
+    store.setFiltros({ search });
+    // Trigger fetch because search changed
+    await store.actualizarDatos(true);
   } else {
-     // If search didn't change, but maybe we just navigated here, ensure we have data.
-     // store.actualizarDatos() checks cache.
-     await store.actualizarDatos();
+    // If search didn't change, but maybe we just navigated here, ensure we have data.
+    // store.actualizarDatos() checks cache.
+    await store.actualizarDatos();
   }
 };
 
 onMounted(() => {
-  const search = route.query.search as string || '';
+  const search = (route.query.search as string) || '';
   store.setFiltros({ search });
   store.actualizarDatos(true); // Force fetch on mount to be sure
 });
@@ -203,7 +208,7 @@ onMounted(() => {
 watch(
   () => route.query.search,
   (newVal) => {
-    const search = newVal as string || '';
+    const search = (newVal as string) || '';
     store.setFiltros({ search });
     store.actualizarDatos(true);
   }

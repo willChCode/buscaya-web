@@ -44,10 +44,10 @@ export default defineNuxtConfig({
             'Encuentra los mejores negocios, servicios y productos en tu zona con Buscaya.',
         },
       ],
-      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+      link: [{ rel: 'icon', type: 'image/png', href: '/logo-navegador.png' }],
     },
   },
   devServer: {
-    port: 3000,
+    port: 3002,
   },
 });

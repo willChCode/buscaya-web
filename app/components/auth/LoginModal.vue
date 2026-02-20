@@ -437,7 +437,7 @@ const handleFinalSubmit = async () => {
 
 // ... Social Login Logic (Unchanged) ...
 const APPLE_CLIENT_ID = 'com.willch24.buscayamobile.web';
-const APPLE_REDIRECT_URI = 'https://127.0.0.1.nip.io:3000'; 
+const APPLE_REDIRECT_URI = 'https://buscaya.io'; 
 
 const loadAppleSDK = () => {
   if (typeof window === 'undefined') return;

@@ -12,7 +12,8 @@ export default defineEventHandler(async (event) => {
   }
 
   // Use the API Key from environment variables
-  const apiKey = process.env.NUXT_OPENAI_API_KEY;
+  const config = useRuntimeConfig();
+  const apiKey = config.openaiApiKey;
 
   if (!apiKey) {
     return {

@@ -4,9 +4,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   runtimeConfig: {
     public: {
-      apiBase: '', // NUXT_PUBLIC_API_BASE
-      googleMapsKey: '', // NUXT_PUBLIC_GOOGLE_MAPS_KEY
-    }
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || '',
+      googleMapsKey: process.env.NUXT_PUBLIC_GOOGLE_MAPS_KEY || '',
+    },
+    openaiApiKey: process.env.NUXT_OPENAI_API_KEY || '',
   },
   devtools: { enabled: true },
   css: ['~/assets/css/tailwind.css'],

@@ -1,6 +1,8 @@
 <template>
   <!-- Mobile Header -->
-  <div class="sticky top-0 flex md:hidden flex-col w-full bg-white shadow-sm z-50">
+  <div
+    class="sticky top-0 flex md:hidden flex-col w-full bg-white shadow-sm z-50"
+  >
     <!-- Top Bar: Hamburger, Search, User -->
     <div
       class="flex items-center justify-between h-[75px] px-4 border-b border-gray-100 gap-3"
@@ -11,9 +13,9 @@
       <!-- Logo Mobile (Left) -->
       <NuxtLink to="/" class="-ml-2 flex items-center pl-1">
         <img
-          src="~/assets/images/logo/buscaya-logo-vertical.png"
+          src="~/assets/images/logo/logo-navegador.png"
           alt="Buscaya"
-          class="h-[54px] w-auto object-contain"
+          class="h-[50px] w-auto object-contain"
         />
       </NuxtLink>
 
@@ -159,11 +161,11 @@
       class="relative bg-white w-[85vw] h-full shadow-xl flex flex-col p-6 transform transition-transform"
     >
       <div class="flex items-center justify-between mb-8">
-          <img
-            src="~assets/images/logo/logo-color.svg"
-            alt="Logo de la aplicación"
-            class="h-7 w-auto"
-          />
+        <img
+          src="~assets/images/logo/logo-color.svg"
+          alt="Logo de la aplicación"
+          class="h-7 w-auto"
+        />
         <button
           @click="showMenu = false"
           class="text-gray-500 hover:text-primary-500"
@@ -225,12 +227,19 @@
           />
           <img
             v-else
-            :src="authStore.user?.photoURL || 'https://ui-avatars.com/api/?name=' + authStore.user?.displayName"
+            :src="
+              authStore.user?.photoURL ||
+              'https://ui-avatars.com/api/?name=' + authStore.user?.displayName
+            "
             class="h-8 w-8 rounded-full mr-3 border border-gray-200"
             alt="Avatar"
           />
           <span class="font-medium text-lg">
-            {{ authStore.user ? truncateName(authStore.user.displayName) : 'Ingreso' }}
+            {{
+              authStore.user
+                ? truncateName(authStore.user.displayName)
+                : 'Ingreso'
+            }}
           </span>
         </button>
       </div>
@@ -242,11 +251,11 @@
   >
     <div class="flex items-center space-x-4 shrink-0">
       <NuxtLink to="/negocios">
-          <img
-            src="~assets/images/logo/logo-color.svg"
-            alt="Logo de la aplicación"
-            class="h-7 w-auto"
-          />
+        <img
+          src="~assets/images/logo/logo-color.svg"
+          alt="Logo de la aplicación"
+          class="h-7 w-auto"
+        />
       </NuxtLink>
       <div class="h-6 border-r border-gray-200"></div>
       <div
@@ -360,19 +369,26 @@
           />
           <img
             v-else
-            :src="authStore.user?.photoURL || 'https://ui-avatars.com/api/?name=' + authStore.user?.displayName"
+            :src="
+              authStore.user?.photoURL ||
+              'https://ui-avatars.com/api/?name=' + authStore.user?.displayName
+            "
             class="h-8 w-8 rounded-full mr-2 border border-gray-200"
             alt="Avatar"
           />
           <span class="font-medium">
-            {{ authStore.user ? truncateName(authStore.user.displayName) : 'Ingreso' }}
+            {{
+              authStore.user
+                ? truncateName(authStore.user.displayName)
+                : 'Ingreso'
+            }}
           </span>
         </button>
       </span>
     </div>
   </nav>
 
-  <main class="min-h-screen" :class="route.meta.paddingClass || 'px-4 md:px-6'">
+  <main class="min-h-screen" :class="route.meta.paddingClass || 'px-3 md:px-6'">
     <slot />
   </main>
 
@@ -600,20 +616,20 @@ const truncateName = (name, maxLength = 10) => {
 
 // Sync searchQuery with route query on mount and change
 onMounted(() => {
-    if (route.query.search) {
-        searchQuery.value = route.query.search;
-    }
+  if (route.query.search) {
+    searchQuery.value = route.query.search;
+  }
 });
 
 watch(
-    () => route.query.search,
-    (newVal) => {
-        if (newVal) {
-            searchQuery.value = newVal;
-        } else if (route.path !== '/resultados') {
-            searchQuery.value = '';
-        }
+  () => route.query.search,
+  (newVal) => {
+    if (newVal) {
+      searchQuery.value = newVal;
+    } else if (route.path !== '/resultados') {
+      searchQuery.value = '';
     }
+  }
 );
 
 // Variables Google Maps
@@ -655,7 +671,10 @@ const handleSearch = () => {
 const handleClearSearch = () => {
   searchQuery.value = '';
   if (route.path.startsWith('/resultados')) {
-    router.push({ path: '/resultados', query: { ...route.query, search: undefined } });
+    router.push({
+      path: '/resultados',
+      query: { ...route.query, search: undefined },
+    });
   }
 };
 

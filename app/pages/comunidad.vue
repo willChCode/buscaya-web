@@ -1,11 +1,11 @@
 <template>
   <div class="min-h-screen bg-gray-50 pt-4 pb-20">
-    <div class="max-w-7xl mx-auto px-4 lg:grid lg:grid-cols-12 lg:gap-8">
+    <div class="max-w-7xl mx-auto px-3 lg:grid lg:grid-cols-12 lg:gap-8">
       <!-- Main Content Area -->
       <main class="lg:col-span-8">
         <!-- Sticky Header & Top Action -->
         <div
-          class="sticky top-[110px] md:top-[64px] z-30 bg-gray-50 -mx-4 px-4 pb-4 pt-3 sm:pb-6 sm:pt-8 mb-2 transition-all"
+          class="sticky top-[110px] md:top-[64px] z-30 bg-gray-50 -mx-3 px-3 pb-4 pt-3 sm:pb-6 sm:pt-8 mb-2 transition-all"
         >
           <!-- "What's on your mind" style box -->
           <div

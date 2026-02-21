@@ -99,9 +99,7 @@ const sendMessage = async () => {
 </script>
 
 <template>
-  <div
-    class="fixed bottom-6 right-6 z-40 font-sans flex flex-col items-end"
-  >
+  <div class="fixed bottom-6 right-6 z-40 font-sans flex flex-col items-end">
     <!-- Chat Window -->
     <transition name="slide-up">
       <div
@@ -211,12 +209,12 @@ const sendMessage = async () => {
               v-model="userInput"
               type="text"
               placeholder="Escribe tu pregunta..."
-              class="flex-1 bg-gray-100 text-gray-800 text-sm rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all"
+              class="flex-1 min-w-0 bg-gray-100 text-gray-800 text-sm rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500/50 transition-all"
             />
             <button
               type="submit"
               :disabled="!userInput.trim() || isLoading"
-              class="bg-primary-500 text-white p-3 rounded-xl hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              class="flex-shrink-0 bg-primary-500 text-white p-3 rounded-full hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

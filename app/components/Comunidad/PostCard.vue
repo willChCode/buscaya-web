@@ -9,7 +9,7 @@
     @click="handleNavigate"
   >
     <!-- Header -->
-    <div class="p-5 flex items-start justify-between">
+    <div class="px-3 py-4 md:p-5 flex items-start justify-between">
       <div class="flex items-center flex-1">
         <div class="relative">
           <img
@@ -77,7 +77,7 @@
     </div>
 
     <!-- Content -->
-    <div class="px-5 pb-4">
+    <div class="px-4 md:px-5 pb-3 md:pb-4">
       <p
         class="text-gray-700 text-[14px] md:text-[15px] leading-[1.6] whitespace-pre-wrap font-medium"
       >
@@ -88,7 +88,7 @@
     <!-- Image -->
     <div
       v-if="post.image"
-      class="mx-5 mb-5 rounded-2xl overflow-hidden bg-gray-50 relative group"
+      class="mx-4 md:mx-5 mb-4 md:mb-5 rounded-2xl overflow-hidden bg-gray-50 relative group"
     >
       <img
         :src="post.image"
@@ -99,14 +99,23 @@
 
     <!-- Stats -->
     <div
-      class="mx-5 py-3 flex items-center justify-between border-t border-gray-50"
+      class="mx-4 md:mx-5 py-2.5 md:py-3 flex items-center justify-between border-t border-gray-50"
     >
       <div class="flex items-center gap-2" v-if="post.likes > 0">
         <div class="flex -space-x-1">
           <div
             class="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center border-2 border-white shadow-sm"
           >
-            <span class="text-[10px]">👍</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-3.5 w-3.5 text-white"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path
+                d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"
+              />
+            </svg>
           </div>
         </div>
         <span class="text-xs font-bold text-gray-500 translate-y-[0.5px]">
@@ -138,7 +147,17 @@
         "
       >
         <div class="transform transition-transform group-active/btn:scale-125">
-          <span class="text-xl" v-if="post.isLikedByCurrentUser">👍</span>
+          <svg
+            v-if="post.isLikedByCurrentUser"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 md:h-6 md:w-6 text-blue-600"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3zM7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"
+            />
+          </svg>
           <svg
             v-else
             xmlns="http://www.w3.org/2000/svg"

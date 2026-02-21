@@ -13,8 +13,12 @@
       <div
         class="absolute left-4 z-10 pointer-events-none flex items-center justify-center w-6 h-6"
       >
+        <div
+          v-if="loadingPredictions"
+          class="w-5 h-5 border-2 border-primary-500/20 border-t-primary-500 rounded-full animate-spin"
+        ></div>
         <svg
-          v-if="!isGoogleReady"
+          v-else-if="!isGoogleReady"
           class="animate-spin h-5 w-5 text-primary-500"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -60,7 +64,7 @@
         :placeholder="
           !isGoogleReady ? 'Cargando mapa...' : 'Ej. Av. constitucion 2050, N.L'
         "
-        class="w-full h-full rounded-xl text-gray-800 placeholder-gray-400 text-lg font-medium border-none outline-none bg-transparent pl-12 pr-[220px] sm:pr-[255px] disabled:cursor-not-allowed disabled:text-gray-500 disabled:bg-gray-100 transition-colors truncate"
+        class="w-full h-full rounded-xl text-gray-800 placeholder-gray-400 text-[15px] sm:text-lg font-medium border-none outline-none bg-transparent pl-12 sm:pl-14 pr-28 sm:pr-[255px] disabled:cursor-not-allowed disabled:text-gray-500 disabled:bg-gray-100 transition-colors truncate"
       />
       <div class="absolute right-2 top-2 bottom-2 flex items-center gap-2">
         <button
@@ -181,6 +185,8 @@ const isPredictionSelected = ref(false);
 const isSearching = ref(false);
 const selectedPlaceId = ref<string | null>(null);
 const searchContainer = ref<HTMLElement | null>(null);
+const loadingPredictions = ref(false);
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 onMounted(() => {
   initGoogleMaps();
@@ -205,10 +211,19 @@ const handleInput = () => {
   if (!addressQuery.value) {
     predictions.value = [];
     showDropdown.value = false;
+    loadingPredictions.value = false;
+    if (debounceTimer) clearTimeout(debounceTimer);
     return;
   }
-  getPlacePredictions(addressQuery.value);
-  showDropdown.value = true;
+
+  // Debounce logic: wait 800ms after typing stops
+  loadingPredictions.value = true;
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    getPlacePredictions(addressQuery.value);
+    showDropdown.value = true;
+    loadingPredictions.value = false;
+  }, 1000);
 };
 
 const onFocus = () => {

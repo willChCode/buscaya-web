@@ -154,7 +154,12 @@
           <button
             @click="submitComment"
             :disabled="!commentText.trim() || submitting"
-            class="w-12 h-12 bg-primary-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary-200 hover:bg-primary-600 transition-all disabled:opacity-30 disabled:shadow-none translate-y-0 active:translate-y-0.5"
+            class="w-12 h-12 rounded-2xl flex items-center justify-center text-white transition-all duration-200 translate-y-0 active:translate-y-0.5 disabled:cursor-not-allowed"
+            :class="[
+              commentText.trim()
+                ? 'bg-primary-500 shadow-lg shadow-primary-200 opacity-100'
+                : 'bg-gray-300 opacity-50 shadow-none',
+            ]"
           >
             <div
               v-if="submitting"

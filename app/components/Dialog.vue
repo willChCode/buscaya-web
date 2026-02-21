@@ -1,31 +1,31 @@
 <script setup lang="ts">
 const props = withDefaults(
   defineProps<{
-    modelValue: boolean
+    modelValue: boolean;
     /**
      * Ancho del modal.
      * Default: 'w-11/12 max-w-lg' (Un ancho estándar cómodo para formularios/texto).
      * Para imágenes puedes usar: 'w-auto max-w-5xl'
      */
-    widthClass?: string
+    widthClass?: string;
     /**
      * Ocultar el botón de cerrar flotante (útil si el contenido ya tiene uno).
      */
-    hideCloseButton?: boolean
+    hideCloseButton?: boolean;
   }>(),
   {
     widthClass: 'w-11/12 max-w-lg mx-auto',
     hideCloseButton: false,
   }
-)
+);
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
-}>()
+  (e: 'update:modelValue', value: boolean): void;
+}>();
 
 const close = () => {
-  emit('update:modelValue', false)
-}
+  emit('update:modelValue', false);
+};
 </script>
 
 <template>
@@ -40,7 +40,7 @@ const close = () => {
     >
       <div
         v-if="modelValue"
-        class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 sm:p-6 overflow-y-auto"
+        class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4 py-4 sm:p-6 overflow-y-auto"
         @click.self="close"
       >
         <Transition

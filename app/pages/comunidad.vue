@@ -123,7 +123,7 @@
             <!-- Pagination / Load More -->
             <div
               v-if="store.posts.length > 0"
-              class="py-8 text-center bg-gray-50 -mx-4 px-4 sm:mx-0 sm:px-0 sm:bg-transparent rounded-b-3xl"
+              class="py-8 text-center bg-gray-50 -mx-3 px-3 sm:mx-0 sm:px-0 sm:bg-transparent rounded-b-3xl"
             >
               <div v-if="loadingMore" class="flex justify-center">
                 <div
@@ -183,7 +183,7 @@
       <!-- Sidebar (Desktop only) -->
       <aside class="hidden lg:block lg:col-span-4">
         <div
-          class="sticky top-[64px] space-y-8 pt-8 -mx-4 px-4 bg-gray-50 h-[calc(100vh-64px)] overflow-y-auto hide-scrollbar"
+          class="sticky top-[64px] space-y-8 pt-8 -mx-3 px-3 bg-gray-50 h-[calc(100vh-64px)] overflow-y-auto hide-scrollbar"
         >
           <!-- Premium Search -->
           <div class="relative group mx-2">

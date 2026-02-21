@@ -30,7 +30,7 @@
       </div>
     </DrawerCard>
 
-    <Dialog v-model="showReviewModal">
+    <Dialog v-model="showReviewModal" widthClass="w-full mx-auto max-w-lg">
       <div
         class="bg-white w-full mx-auto rounded-3xl overflow-hidden shadow-2xl transform transition-all border"
       >
@@ -157,7 +157,7 @@
                   ></path>
                 </svg>
               </span>
-              <span v-else>Publicar Opinión</span>
+              <span v-else>Publicar</span>
             </button>
           </div>
         </div>

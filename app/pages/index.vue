@@ -56,39 +56,21 @@ const handleCurrentLocation = async () => {
     ></div>
 
     <div
-      class="relative z-10 flex flex-col h-full w-full max-w-[90%] mx-auto px-6"
+      class="relative z-10 flex flex-col h-full w-full max-w-[95%] md:max-w-[90%] mx-auto px-4 md:px-6"
     >
-      <nav class="flex justify-between items-center py-6">
+      <nav class="flex justify-between items-center mt-12 mx-auto md:mx-0">
         <div class="flex items-center">
-          <span
-            class="text-3xl font-extrabold text-white tracking-tight drop-shadow-lg"
-            >DiDi Food</span
-          >
+          <img
+            src="@/assets/images/logo/buscaya-logo-blanco.png"
+            alt="Buscaya"
+            class="h-8 md:h-9 w-auto drop-shadow-lg"
+          />
         </div>
-        <button
-          class="flex items-center gap-2 text-white font-semibold hover:bg-white/20 px-5 py-2.5 rounded-full transition-all border border-white/30 hover:border-white backdrop-blur-sm"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-          Iniciar sesión
-        </button>
       </nav>
 
       <main class="flex-1 flex flex-col justify-center pb-20">
         <h1
-          class="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-10 drop-shadow-xl leading-none text-center sm:text-left"
+          class="text-3xl sm:text-5xl md:text-6xl font-bold text-white mb-10 drop-shadow-xl leading-none text-center sm:text-left"
         >
           Encuentra negocios <br />
           en tu colonia
@@ -125,14 +107,10 @@ const handleCurrentLocation = async () => {
         </div>
 
         <p
-          class="mt-6 text-white font-medium text-base drop-shadow-md text-center sm:text-left"
+          class="mt-8 text-white font-medium text-sm md:text-base drop-shadow-md text-center sm:text-left max-w-2xl leading-relaxed"
         >
-          ¿Ya tienes cuenta?
-          <span
-            class="underline cursor-pointer hover:text-primary-500 transition-colors"
-            >Inicia sesión</span
-          >
-          para ver tus direcciones
+          Ingresa tu ubicación para descubrir los comercios locales más cercanos
+          y sumergirte en la mejor experiencia de tu colonia.
         </p>
       </main>
     </div>

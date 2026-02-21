@@ -443,6 +443,7 @@
               class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none"
             >
               <svg
+                v-if="!loadingPredictions"
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5"
                 fill="none"
@@ -456,6 +457,10 @@
                   d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                 />
               </svg>
+              <div
+                v-else
+                class="w-5 h-5 border-2 border-primary-500/20 border-t-primary-500 rounded-full animate-spin"
+              ></div>
             </div>
           </div>
 
@@ -644,6 +649,8 @@ const predictions = ref([]);
 const selectedAddressText = ref('');
 const selectedLocation = ref(null); // { lat, lng }
 const mapContainer = ref(null); // Ref al div del mapa
+const loadingPredictions = ref(false);
+let debounceTimer = null;
 
 // API KEY
 const GOOGLE_API_KEY = useRuntimeConfig().public.googleMapsKey;
@@ -713,24 +720,32 @@ const initServices = () => {
 const handleAddressInput = () => {
   if (!addressQuery.value || !autocompleteService) {
     predictions.value = [];
+    loadingPredictions.value = false;
+    if (debounceTimer) clearTimeout(debounceTimer);
     return;
   }
-  const request = {
-    input: addressQuery.value,
-    componentRestrictions: { country: 'mx' },
-    types: ['geocode', 'establishment'],
-  };
 
-  autocompleteService.getPlacePredictions(request, (results, status) => {
-    if (
-      status === window.google.maps.places.PlacesServiceStatus.OK &&
-      results
-    ) {
-      predictions.value = results;
-    } else {
-      predictions.value = [];
-    }
-  });
+  loadingPredictions.value = true;
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    const request = {
+      input: addressQuery.value,
+      componentRestrictions: { country: 'mx' },
+      types: ['geocode', 'establishment'],
+    };
+
+    autocompleteService.getPlacePredictions(request, (results, status) => {
+      loadingPredictions.value = false;
+      if (
+        status === window.google.maps.places.PlacesServiceStatus.OK &&
+        results
+      ) {
+        predictions.value = results;
+      } else {
+        predictions.value = [];
+      }
+    });
+  }, 1000);
 };
 
 // --- Transición: De Lista -> Mapa ---

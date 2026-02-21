@@ -1,8 +1,10 @@
 <template>
   <div
-    class="lg:col-span-4 flex flex-col h-full bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden"
+    class="lg:col-span-4 flex flex-col h-auto lg:h-full max-h-[580px] lg:max-h-none bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden"
   >
-    <div class="p-4 px-6 md:px-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+    <div
+      class="p-4 px-6 md:px-4 border-b border-gray-200 bg-white sticky top-0 z-10"
+    >
       <h3 class="font-bold text-lg text-gray-800">Menú y Productos</h3>
       <p class="text-xs text-gray-400">Selecciona para ver detalles</p>
     </div>
@@ -31,7 +33,10 @@
         </div>
         <div class="w-20 h-20 bg-gray-100 rounded-lg shrink-0 overflow-hidden">
           <img
-            :src="(typeof prod.foto === 'string' ? prod.foto : prod.foto?.url) || 'https://placehold.co/150'"
+            :src="
+              (typeof prod.foto === 'string' ? prod.foto : prod.foto?.url) ||
+              'https://placehold.co/150'
+            "
             class="w-full h-full object-cover"
             alt="producto"
           />

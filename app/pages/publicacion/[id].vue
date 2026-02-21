@@ -2,14 +2,14 @@
   <div class="min-h-screen bg-gray-50 pb-20">
     <!-- Navbar (Static/Sticky and centered in layout) -->
     <div class="bg-white border-b border-gray-100 sticky top-0 z-40 px-3 py-3">
-      <div class="max-w-4xl mx-auto flex items-center gap-4">
+      <div class="max-w-4xl mx-auto flex items-center gap-2">
         <button
           @click="goBack"
           class="p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6"
+            class="h-5 w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -22,7 +22,7 @@
             />
           </svg>
         </button>
-        <h1 class="font-bold text-xl text-gray-900 tracking-tight">
+        <h1 class="font-bold text-lg md:text-xl text-gray-900 tracking-tight">
           Publicación
         </h1>
       </div>

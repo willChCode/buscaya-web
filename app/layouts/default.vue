@@ -404,7 +404,7 @@
     >
       <div v-if="step === 1" class="px-2 pt-2 w-full flex flex-col h-[400px]">
         <div>
-          <h2 class="text-xl font-bold text-gray-900 mb-4">
+          <h2 class="text-lg md:text-xl font-bold text-gray-900 mb-4">
             Ingresa tu dirección
           </h2>
 

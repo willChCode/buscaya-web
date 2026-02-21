@@ -44,17 +44,23 @@
       >
         <div class="flex justify-between items-start mb-1">
           <div class="flex items-center gap-2">
-             <img 
-               v-if="review.usuario?.image?.url && !brokenImages[idx]" 
-               :src="review.usuario.image.url" 
-               class="w-6 h-6 rounded-full object-cover"
-               alt="Avatar"
-               @error="brokenImages[idx] = true"
-             />
-             <div v-else :class="['w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-sm', getAvatarBg()]">
-                {{ review.usuario?.nombre?.charAt(0).toUpperCase() || 'A' }}
-             </div>
-             <span class="font-bold text-sm text-gray-800">{{
+            <img
+              v-if="review.usuario?.image?.url && !brokenImages[idx]"
+              :src="review.usuario.image.url"
+              class="w-6 h-6 rounded-full object-cover"
+              alt="Avatar"
+              @error="brokenImages[idx] = true"
+            />
+            <div
+              v-else
+              :class="[
+                'w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-sm',
+                getAvatarBg(),
+              ]"
+            >
+              {{ review.usuario?.nombre?.charAt(0).toUpperCase() || 'A' }}
+            </div>
+            <span class="font-bold text-sm text-gray-800">{{
               review.usuario?.nombre || 'Anónimo'
             }}</span>
           </div>

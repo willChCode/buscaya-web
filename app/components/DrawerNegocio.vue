@@ -4,13 +4,16 @@
       :modelValue="isOpen"
       @update:modelValue="$emit('update:isOpen', $event)"
     >
-      <div v-if="negocio" class="h-full flex flex-col lg:h-[75vh]">
+      <div
+        v-if="negocio"
+        class="h-[80vh] lg:h-[75vh] flex flex-col overflow-y-auto overflow-x-hidden"
+      >
         <div
-          class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full lg:overflow-hidden"
+          class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:h-full lg:overflow-hidden"
         >
           <!-- Columna Izquierda: Info, Contacto, Horarios -->
           <div
-            class="lg:col-span-4 flex flex-col gap-0 lg:overflow-y-auto lg:pr-4 h-full"
+            class="lg:col-span-4 flex flex-col gap-0 lg:overflow-y-auto lg:pr-4 lg:h-full"
           >
             <NegocioHeader :negocio="negocio" />
             <NegocioContact :negocio="negocio" @rate="handleRate" />
@@ -22,10 +25,7 @@
           <NegocioMenu :negocio="negocio" />
 
           <!-- Columna Derecha: Reseñas -->
-          <NegocioReviews
-            :negocio="negocio"
-            @write-review="handleRate"
-          />
+          <NegocioReviews :negocio="negocio" @write-review="handleRate" />
         </div>
       </div>
     </DrawerCard>
@@ -210,15 +210,20 @@ const {
 import { registrarVisita } from '~/services/negocio';
 import { watch } from 'vue';
 
-watch(() => props.isOpen, (newVal) => {
-  if (newVal && props.negocio) {
-    const id = props.negocio._id || props.negocio.id;
-    if (id) {
-       // Fire and forget, no bloqueamos la UI
-       registrarVisita(id).catch(err => console.error('Error tracking visit:', err));
+watch(
+  () => props.isOpen,
+  (newVal) => {
+    if (newVal && props.negocio) {
+      const id = props.negocio._id || props.negocio.id;
+      if (id) {
+        // Fire and forget, no bloqueamos la UI
+        registrarVisita(id).catch((err) =>
+          console.error('Error tracking visit:', err)
+        );
+      }
     }
   }
-});
+);
 </script>
 
 <style scoped>

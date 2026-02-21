@@ -138,11 +138,7 @@
           viewBox="0 0 20 20"
           fill="currentColor"
         >
-          <path
-            fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"
-          />
+          <path d="M5 8l5 5 5-5H5z" />
         </svg>
       </div>
     </div>
@@ -260,21 +256,31 @@
       <div class="h-6 border-r border-gray-200"></div>
       <div
         @click="showLocationModal = true"
-        class="flex items-center text-sm font-semibold text-primary-500 cursor-pointer hover:text-primary-700 select-none"
+        class="flex gap-1 items-center text-sm font-semibold text-primary-500 cursor-pointer hover:text-primary-700 select-none"
       >
-        <img
-          class="h-[18px] w-[18px] mr-1"
-          src="http://solutiai.com/wp-content/uploads/2025/11/location-pin-filled-svgrepo-com-1.svg"
-          alt=""
-        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-4 w-4 mr-1 text-primary-500 -mt-[1px]"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+            clip-rule="evenodd"
+          />
+        </svg>
         <span class="truncate max-w-[200px]">
           {{ store.ubicacion ? store.ubicacion?.direccion : 'cargando...' }}
         </span>
-        <img
-          class="h-[18px] w-[18px] ml-1"
-          src="http://solutiai.com/wp-content/uploads/2025/11/caret-bottom-svgrepo-com.svg"
-          alt=""
-        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 ml-1 text-primary-500"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path d="M5 8l5 5 5-5H5z" />
+        </svg>
       </div>
       <!-- <div class="h-6 border-r border-gray-200"></div> -->
     </div>

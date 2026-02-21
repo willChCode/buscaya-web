@@ -174,7 +174,7 @@
             />
           </svg>
         </div>
-        <span class="text-[14px] md:text-sm">Me gusta</span>
+        <span class="text-[13px] md:text-sm">Me gusta</span>
       </button>
 
       <button
@@ -195,7 +195,7 @@
             d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
           />
         </svg>
-        <span class="text-[14px] md:text-sm">Comentar</span>
+        <span class="text-[13px] md:text-sm">Comentar</span>
       </button>
 
       <button
@@ -216,7 +216,7 @@
             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
           />
         </svg>
-        <span class="text-[14px] md:text-sm">Reportar</span>
+        <span class="text-[13px] md:text-sm">Reportar</span>
       </button>
     </div>
   </div>

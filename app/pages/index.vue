@@ -15,10 +15,13 @@ const store = useUbicacionNegocios();
 const GOOGLE_API_KEY = 'AIzaSyCNNlqDH6daeLe_UCCWRWQy8tIOhZ0BwZk';
 
 const isSearching = ref(false);
+const isReady = ref(false);
 
 onMounted(async () => {
   if (store.ubicacion && store.ubicacion.direccion) {
     router.push('/negocios');
+  } else {
+    isReady.value = true;
   }
 });
 
@@ -44,7 +47,10 @@ const handleCurrentLocation = async () => {
 </script>
 
 <template>
-  <div class="fixed inset-0 z-[9999] overflow-hidden font-sans bg-gray-900">
+  <div
+    v-if="isReady"
+    class="fixed inset-0 z-[9999] overflow-hidden font-sans bg-gray-900"
+  >
     <div
       class="absolute inset-0 bg-cover bg-center z-0 transition-transform duration-1000 transform hover:scale-105"
       style="

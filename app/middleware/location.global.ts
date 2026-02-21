@@ -1,6 +1,9 @@
 import { useUbicacionNegocios } from '@/store/ubicacion.store';
 
 export default defineNuxtRouteMiddleware((to, from) => {
+  // Solo ejecutar en el cliente para evitar falsos positivos en SSR
+  if (!process.client) return;
+
   const store = useUbicacionNegocios();
 
   // Permite siempre la landing page

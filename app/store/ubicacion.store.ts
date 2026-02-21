@@ -30,11 +30,11 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
     negocios: [] as Negocio[],
     negociosFitlrados: [] as Negocio[],
     totalNegocios: 0,
-    
+
     // Separated state for Home Page (Unfiltered)
     negociosHome: [] as Negocio[],
     totalNegociosHome: 0,
-    
+
     lastFilterQuery: null as any,
   }),
   persist: {
@@ -50,7 +50,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
       const expiracion = 2 * 60 * 1000; // 2 minutos
 
       // ✅ Usa cache si ya existe y no está vencido (y no han cambiado los filtros relevantes para fetch)
-      // Nota: Si cambian filtros como 'radio' o 'openNow', deberíamos forzar fetch. 
+      // Nota: Si cambian filtros como 'radio' o 'openNow', deberíamos forzar fetch.
       // Por ahora confiamos en que 'force' viene true desde el UI cuando se aplican filtros.
       if (
         !force &&
@@ -63,15 +63,22 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
       }
 
       // Si no tenemos ubicación válida (falta obj o lat/lng), intentamos obtenerla
-      if (!this.ubicacion || typeof this.ubicacion.lat === 'undefined' || typeof this.ubicacion.lng === 'undefined') {
-        console.warn('⚠️ Ubicación inválida o incompleta stored, intentando obtener GPS...');
+      if (
+        !this.ubicacion ||
+        typeof this.ubicacion.lat === 'undefined' ||
+        typeof this.ubicacion.lng === 'undefined'
+      ) {
+        console.warn(
+          '⚠️ Ubicación inválida o incompleta stored, intentando obtener GPS...'
+        );
         try {
           const coords = await obtenerCoordenadas();
           const { latitude, longitude } = coords.coords;
           await this.establecerUbicacionManual(latitude, longitude); // Esto ya guarda y actualiza datos
           return;
         } catch (e) {
-          this.error = 'No se pudo obtener ubicación. Por favor actívala manual.';
+          this.error =
+            'No se pudo obtener ubicación. Por favor actívala manual.';
           return;
         }
       }
@@ -80,22 +87,30 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
       this.error = null;
 
       try {
-        if (!this.ubicacion) throw new Error('No hay ubicación para actualizar');
+        if (!this.ubicacion)
+          throw new Error('No hay ubicación para actualizar');
 
         const { lat, lng } = this.ubicacion;
 
         // base de datos
         const distanciaEnMetros = this.filtros.radius || 3000;
         const apiFilters = {
-             rating: this.filtros.rating > 0 ? this.filtros.rating : undefined,
-             group: this.filtros.giro || undefined,
-             openNow: this.filtros.abierto === 'abierto',
-             day: this.filtros.abierto === 'abierto' ? this.filtros.day : undefined,
-             time: this.filtros.abierto === 'abierto' ? this.filtros.time : undefined,
-             search: this.filtros.search || undefined
+          rating: this.filtros.rating > 0 ? this.filtros.rating : undefined,
+          group: this.filtros.giro || undefined,
+          openNow: this.filtros.abierto === 'abierto',
+          day:
+            this.filtros.abierto === 'abierto' ? this.filtros.day : undefined,
+          time:
+            this.filtros.abierto === 'abierto' ? this.filtros.time : undefined,
+          search: this.filtros.search || undefined,
         };
-        
-        console.log('📡 [STORE] Fetching negocios with params:', { lat, lng, distanciaEnMetros, ...apiFilters });
+
+        console.log('📡 [STORE] Fetching negocios with params:', {
+          lat,
+          lng,
+          distanciaEnMetros,
+          ...apiFilters,
+        });
 
         const res = await obtenerNegociosCercanos(
           lat,
@@ -104,11 +119,16 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
           apiFilters
         );
         this.negocios = res.data;
-        // Also update local filtered list to full list initially, 
+        // Also update local filtered list to full list initially,
         // as the backend has already filtered them.
-        this.negociosFitlrados = res.data; 
+        this.negociosFitlrados = res.data;
         this.totalNegocios = res.meta.total;
-        console.log('✅ NEGOCIOS:', this.negocios.length, 'TOTAL:', this.totalNegocios);
+        console.log(
+          '✅ NEGOCIOS:',
+          this.negocios.length,
+          'TOTAL:',
+          this.totalNegocios
+        );
 
         this.lastUpdate = Date.now();
       } catch (e: any) {
@@ -118,39 +138,48 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
         this.cargando = false;
       }
     },
-    
+
     // Accion especifica para la HOME (ignora filtros de categoria/search, solo usa radio)
     async fetchHomeNegocios(force = false) {
-       if (!this.ubicacion || typeof this.ubicacion.lat === 'undefined') return;
-       
-       // Simple cache check specific to home? For now let's reuse logic or just simple check
-       if (!force && this.negociosHome.length > 0) return;
+      if (!this.ubicacion || typeof this.ubicacion.lat === 'undefined') return;
 
-       this.cargando = true;
-       try {
-          const { lat, lng } = this.ubicacion;
-          const distanciaEnMetros = 4000; // radio para negocios home
-          
-          // Solo filtros basicos "Home": Sin categoria, sin search
-          // Tal vez si queremos respetar "Abierto ahora" si es muy importante, pero el usuario pidio que no afecte.
-          // Asumiremos que HOME = Discovery puro (solo radio).
-          const apiFilters = {
-              // No group, No search, No openNow per default discovery? 
-              // Or maybe keep openNow if it's a global preference? 
-              // User said "solo afecte a resultados... que siempre tenga el mismo dato que solicito de 5km".
-              // So literally just Radius.
-          };
+      // Simple cache check specific to home? For now let's reuse logic or just simple check
+      if (!force && this.negociosHome.length > 0) return;
 
-          console.log('🏠 [STORE] Fetching HOME negocios (Radius only):', { lat, lng, distanciaEnMetros });
-          const res = await obtenerNegociosCercanos(lat, lng, distanciaEnMetros, apiFilters);
-          
-          this.negociosHome = res.data;
-          this.totalNegociosHome = res.meta.total;
-       } catch (e) {
-          console.error('Error fetching home negocios:', e);
-       } finally {
-          this.cargando = false;
-       }
+      this.cargando = true;
+      try {
+        const { lat, lng } = this.ubicacion;
+        const distanciaEnMetros = 4000; // radio para negocios home
+
+        // Solo filtros basicos "Home": Sin categoria, sin search
+        // Tal vez si queremos respetar "Abierto ahora" si es muy importante, pero el usuario pidio que no afecte.
+        // Asumiremos que HOME = Discovery puro (solo radio).
+        const apiFilters = {
+          // No group, No search, No openNow per default discovery?
+          // Or maybe keep openNow if it's a global preference?
+          // User said "solo afecte a resultados... que siempre tenga el mismo dato que solicito de 5km".
+          // So literally just Radius.
+        };
+
+        console.log('🏠 [STORE] Fetching HOME negocios (Radius only):', {
+          lat,
+          lng,
+          distanciaEnMetros,
+        });
+        const res = await obtenerNegociosCercanos(
+          lat,
+          lng,
+          distanciaEnMetros,
+          apiFilters
+        );
+
+        this.negociosHome = res.data;
+        this.totalNegociosHome = res.meta.total;
+      } catch (e) {
+        console.error('Error fetching home negocios:', e);
+      } finally {
+        this.cargando = false;
+      }
     },
     abrirDrawer() {
       this.drawerFiltro = true;
@@ -165,7 +194,16 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
       this.filtros = { ...this.filtros, ...filtros };
     },
     resetFiltros() {
-      this.filtros = { search: '', giro: '', abierto: '', radius: 3000, rating: 0, openNow: false, day: undefined, time: undefined };
+      this.filtros = {
+        search: '',
+        giro: '',
+        abierto: '',
+        radius: 3000,
+        rating: 0,
+        openNow: false,
+        day: undefined,
+        time: undefined,
+      };
     },
     async establecerUbicacionManual(lat: number, lng: number) {
       this.cargando = true;
@@ -195,13 +233,13 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
 
         // 2. Actualizar datos usando la nueva ubicación
         await Promise.all([
-           this.actualizarDatos(true),
-           this.fetchHomeNegocios(true)
+          this.actualizarDatos(true),
+          this.fetchHomeNegocios(true),
         ]);
       } catch (e: any) {
         this.error = e.message;
         console.error('Error al establecer ubicación manual:', e);
-        this.cargando = false; 
+        this.cargando = false;
       }
     },
   },

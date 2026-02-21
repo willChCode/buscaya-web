@@ -10,17 +10,50 @@
         </p>
       </span>
 
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 shrink-0">
+        <!-- Active Filter Tags -->
+        <div
+          v-if="activeFilters.length > 0"
+          class="hidden sm:flex items-center gap-2 overflow-x-auto no-scrollbar py-1"
+        >
+          <div
+            v-for="filter in activeFilters"
+            :key="filter.id"
+            class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 whitespace-nowrap"
+          >
+            <span class="text-xs font-medium text-gray-700">{{
+              filter.label
+            }}</span>
+            <button
+              @click="removeFilter(filter.id)"
+              class="text-gray-400 hover:text-red-500 transition-colors"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3.5 w-3.5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
         <button
           @click="handleSeeAll"
-          class="text-sm font-semibold text-gray-500 hover:text-primary-500 transition-colors"
+          class="text-sm font-semibold text-gray-500 hover:text-primary-500 transition-colors whitespace-nowrap"
         >
           Ver todos
         </button>
         <button
           type="button"
           @click="isFilterOpen = true"
-          class="group flex items-center gap-2 rounded-full bg-white px-4 py-2 transition-colors hover:bg-gray-200 cursor-pointer"
+          class="group flex items-center gap-2 rounded-full bg-white px-4 py-2 transition-colors hover:bg-gray-200 cursor-pointer shrink-0"
         >
           <span class="text-sm font-bold"> Filtros </span>
           <svg
@@ -59,6 +92,37 @@
           </svg>
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Mobile Active Filters (Scrollable) -->
+  <div
+    v-if="activeFilters.length > 0"
+    class="flex sm:hidden overflow-x-auto no-scrollbar gap-2 px-4 pb-4 bg-gray-100"
+  >
+    <div
+      v-for="filter in activeFilters"
+      :key="filter.id"
+      class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 whitespace-nowrap"
+    >
+      <span class="text-xs font-medium text-gray-700">{{ filter.label }}</span>
+      <button
+        @click="removeFilter(filter.id)"
+        class="text-gray-400 hover:text-red-500 transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-3.5 w-3.5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -164,6 +228,44 @@ const pageTitle = computed(() => {
   const texto = rawCat?.replace(/-/g, ' ') || rawQuery || 'Resultados';
   return texto.charAt(0).toUpperCase() + texto.slice(1);
 });
+
+// --- Filtros Activos ---
+const activeFilters = computed(() => {
+  const filters = [];
+  const f = store.filtros;
+
+  if (f.giro) {
+    filters.push({ id: 'giro', label: f.giro });
+  }
+  if (f.abierto === 'abierto') {
+    filters.push({ id: 'abierto', label: 'Abierto ahora' });
+  } else if (f.abierto === 'cerrado') {
+    filters.push({ id: 'abierto', label: 'Cerrado' });
+  }
+  if (f.rating > 0) {
+    filters.push({ id: 'rating', label: `${f.rating}+ Estrellas` });
+  }
+
+  return filters;
+});
+
+const removeFilter = async (id: string) => {
+  if (id === 'giro') {
+    store.setFiltros({ giro: '' });
+    // Also remove from URL if present
+    if (route.query.category) {
+      const newQuery = { ...route.query };
+      delete newQuery.category;
+      await router.push({ query: newQuery });
+    }
+  } else if (id === 'abierto') {
+    store.setFiltros({ abierto: '' });
+  } else if (id === 'rating') {
+    store.setFiltros({ rating: 0 });
+  }
+
+  await store.actualizarDatos(true);
+};
 
 // --- Helper de Coincidencia ---
 const coincide = (fuente: any, terminoLimpio: string) => {

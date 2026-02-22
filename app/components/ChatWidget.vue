@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, nextTick, watch } from 'vue';
+import { ref, nextTick, watch, computed } from 'vue';
+import { useRoute } from 'vue-router';
 import { useUbicacionNegocios } from '@/store/ubicacion.store';
 import { marked } from 'marked';
 
+const route = useRoute();
 const store = useUbicacionNegocios();
 const isOpen = ref(false);
 const isLoading = ref(false);
@@ -16,6 +18,10 @@ const messages = ref<{ role: 'user' | 'assistant'; content: string }[]>([
 ]);
 
 const messagesContainer = ref<HTMLElement | null>(null);
+
+const isVisible = computed(() => {
+  return !['/comunidad', '/publicacion'].some((p) => route.path.startsWith(p));
+});
 
 const toggleChat = () => {
   isOpen.value = !isOpen.value;
@@ -96,7 +102,10 @@ const sendMessage = async () => {
 </script>
 
 <template>
-  <div class="fixed bottom-6 right-6 z-40 font-sans flex flex-col items-end">
+  <div
+    v-if="isVisible"
+    class="fixed bottom-6 right-6 z-40 font-sans flex flex-col items-end"
+  >
     <!-- Chat Window -->
     <transition name="slide-up">
       <div

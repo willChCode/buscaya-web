@@ -137,7 +137,7 @@
           <!-- Input Area -->
           <div class="flex-1 relative">
             <textarea
-              v-model="commentText"
+              :value="commentText"
               ref="textInput"
               :placeholder="
                 replyingTo
@@ -146,7 +146,7 @@
               "
               class="w-full bg-gray-50 border-transparent rounded-2xl px-4 py-3 text-[15px] focus:bg-white focus:border-primary-500 transition-all resize-none max-h-32 flex"
               rows="1"
-              @input="adjustTextareaHeight"
+              @input="handleInput"
             ></textarea>
           </div>
 
@@ -248,10 +248,15 @@ const goBack = () => {
   }
 };
 
-const adjustTextareaHeight = (e: Event) => {
-  const target = e.target as HTMLTextAreaElement;
+const adjustTextareaHeight = (target: HTMLTextAreaElement) => {
   target.style.height = 'auto';
   target.style.height = target.scrollHeight + 'px';
+};
+
+const handleInput = (e: Event) => {
+  const target = e.target as HTMLTextAreaElement;
+  commentText.value = target.value;
+  adjustTextareaHeight(target);
 };
 
 const handleCommentLike = async (comment: any) => {

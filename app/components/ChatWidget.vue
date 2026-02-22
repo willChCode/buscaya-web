@@ -62,8 +62,6 @@ const sendMessage = async () => {
       }))
       .slice(0, 50); // Limit context size
 
-    console.log(context);
-
     const response = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -73,7 +71,6 @@ const sendMessage = async () => {
         currentColonia: store.ubicacion?.colonia || 'Ubicación actual', // Send current location context
       }),
     });
-    console.log(response);
 
     const data = await response.json();
 

@@ -11,9 +11,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   // Si no hay ubicación establecida, redirigir a la landing
   if (!store.ubicacion || !store.ubicacion.direccion) {
-    console.log(
-      '🚩 [GUARD] Sin ubicación detectada, redirigiendo a la landing...'
-    );
     return navigateTo('/');
   }
 });

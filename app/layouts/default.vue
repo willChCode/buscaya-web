@@ -827,9 +827,6 @@ const initMap = (location) => {
 // --- Finalizar ---
 const confirmarDireccion = async () => {
   if (!selectedLocation.value) return;
-  console.log(selectedLocation.value);
-
-  console.log('Guardando:', selectedAddressText.value);
 
   // Usamos la acción del store que ya existe para actualizar todo (dirección y negocios)
   await store.establecerUbicacionManual(

@@ -58,7 +58,6 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
         this.negocios.length > 0 &&
         ahora - this.lastUpdate < expiracion
       ) {
-        console.log('⏩ Usando datos en cache');
         return;
       }
 
@@ -105,13 +104,6 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
           search: this.filtros.search || undefined,
         };
 
-        console.log('📡 [STORE] Fetching negocios with params:', {
-          lat,
-          lng,
-          distanciaEnMetros,
-          ...apiFilters,
-        });
-
         const res = await obtenerNegociosCercanos(
           lat,
           lng,
@@ -123,12 +115,6 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
         // as the backend has already filtered them.
         this.negociosFitlrados = res.data;
         this.totalNegocios = res.meta.total;
-        console.log(
-          '✅ NEGOCIOS:',
-          this.negocios.length,
-          'TOTAL:',
-          this.totalNegocios
-        );
 
         this.lastUpdate = Date.now();
       } catch (e: any) {
@@ -161,11 +147,6 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
           // So literally just Radius.
         };
 
-        console.log('🏠 [STORE] Fetching HOME negocios (Radius only):', {
-          lat,
-          lng,
-          distanciaEnMetros,
-        });
         const res = await obtenerNegociosCercanos(
           lat,
           lng,
@@ -212,7 +193,6 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
         // 1. Obtener dirección desde coordenadas
         const direccionData = await obtenerDireccion(lat, lng);
         const datosUbicacion = direccionData.address_components;
-        console.log('DATOS UBICACION', datosUbicacion);
 
         this.ubicacion = {
           lat,
@@ -229,7 +209,6 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
           cp: extraerValor(datosUbicacion, 'postal_code'),
           direccion: direccionData.formatted_address,
         };
-        console.log('UBICACION MANUAL GUARDADA', this.ubicacion);
 
         // 2. Actualizar datos usando la nueva ubicación
         await Promise.all([

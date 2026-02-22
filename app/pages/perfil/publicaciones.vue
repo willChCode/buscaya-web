@@ -13,7 +13,7 @@
     </div>
 
     <div
-      class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 gap-4"
+      class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 md:mb-10 gap-4"
     >
       <div>
         <h2
@@ -31,12 +31,12 @@
       <div
         v-for="post in posts"
         :key="post.id"
-        class="flex flex-col sm:flex-row gap-6 py-6 border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors group relative -mx-4 px-4 sm:mx-0 sm:px-0"
+        class="flex flex-col sm:flex-row gap-2 md:gap-6 py-6 border-b border-gray-100 last:border-0 hover:bg-gray-50/50 transition-colors group relative -mx-4 px-4 sm:mx-0 sm:px-0"
       >
         <!-- Image -->
         <div
           v-if="post.image"
-          class="w-full sm:w-20 sm:h-20 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100"
+          class="w-full h-56 sm:w-20 sm:h-20 bg-gray-50 rounded-xl overflow-hidden flex-shrink-0 border border-gray-100"
         >
           <img
             :src="post.image"
@@ -148,7 +148,7 @@
 
         <!-- Mobile Actions (Always Visible) -->
         <div
-          class="flex sm:hidden justify-end gap-4 border-t border-gray-50 pt-3 mt-1"
+          class="flex sm:hidden justify-end gap-4 border-t border-gray-50 pt-1 mt-1"
         >
           <button
             @click="router.push(`/publicacion/${post.id}`)"

@@ -34,9 +34,9 @@
             <span class="hover:text-gray-600 cursor-default">{{
               relativeTime
             }}</span>
-            <span class="mx-2">•</span>
+            <span class="mx-2 hidden md:inline">•</span>
             <div
-              class="flex items-center gap-1 hover:text-gray-600 cursor-default"
+              class="hidden md:flex items-center gap-1 hover:text-gray-600 cursor-default"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

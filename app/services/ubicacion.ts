@@ -10,24 +10,24 @@
 export async function obtenerCoordenadas(): Promise<GeolocationPosition> {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
-      reject(new Error('Tu navegador no soporta geolocalización'))
+      reject(new Error('Tu navegador no soporta geolocalización'));
     }
-    navigator.geolocation.getCurrentPosition(resolve, reject)
-  })
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
 }
 
 /**
  * Convierte coordenadas (lat, lng) en dirección con Google Maps
  */
 export async function obtenerDireccion(lat: number, lng: number) {
-  const GMAPS_API_KEY = useRuntimeConfig().public.googleMapsKey
+  const GMAPS_API_KEY = useRuntimeConfig().public.googleMapsKey;
   const resp = await fetch(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GMAPS_API_KEY}`
-  )
-  const data = await resp.json()
+  );
+  const data = await resp.json();
 
   if (data.status !== 'OK' || data.results.length === 0) {
-    throw new Error('No se pudo obtener la dirección exacta')
+    throw new Error('No se pudo obtener la dirección exacta');
   }
 
   // // 2️⃣ Buscar colonias cercanas (Places API con proxy para evitar CORS)
@@ -59,8 +59,7 @@ export async function obtenerDireccion(lat: number, lng: number) {
   //   console.error('❌ Error al obtener colonias cercanas:', err);
   // }
 
-  console.log(data.results)
-  return data.results[0] // address_components + formatted_address
+  return data.results[0]; // address_components + formatted_address
 }
 // export async function obtenerDireccion(lat: number, lng: number) {
 //   const GMAPS_API_KEY = 'AIzaSyCNNlqDH6daeLe_UCCWRWQy8tIOhZ0BwZk'; // ⚠️ reemplaza con tu propia key

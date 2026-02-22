@@ -20,18 +20,16 @@ const store = useUbicacionNegocios();
  * Navega a la página de resultados con el filtro aplicado en el store.
  */
 const goToCategoryResults = (nombre) => {
-  console.log('Navegando a categoría:', nombre);
-  
   // Preserve radius to respect user config
   const currentRadius = store.filtros.radius;
 
   // Limpiar otros filtros y establecer el giro
   store.resetFiltros();
-  store.setFiltros({ 
+  store.setFiltros({
     giro: nombre,
-    radius: currentRadius
+    radius: currentRadius,
   });
-  
+
   router.push({
     path: '/resultados',
   });
@@ -48,7 +46,9 @@ const goToCategoryResults = (nombre) => {
       alt=""
       class="h-16 md:h-20 m-auto object-cover rounded-lg"
     />
-    <p class="text-center text-[12px] md:text-[13px] font-semibold leading-[1.3] py-1">
+    <p
+      class="text-center text-[12px] md:text-[13px] font-semibold leading-[1.3] py-1"
+    >
       {{ grupo.nombre }}
     </p>
   </div>

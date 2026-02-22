@@ -163,6 +163,7 @@
         </div>
       </div>
     </Dialog>
+    <LoginModal v-model:isOpen="showLoginModal" />
   </div>
 </template>
 
@@ -177,10 +178,13 @@ import NegocioMenu from '~/components/negocio/NegocioMenu.vue';
 import NegocioLocation from '~/components/negocio/NegocioLocation.vue';
 import NegocioReviews from '~/components/negocio/NegocioReviews.vue';
 import { useNegocioReviews } from '~/composables/useNegocioReviews';
+import LoginModal from '~/components/auth/LoginModal.vue';
+
+const showLoginModal = ref(false);
 
 const handleRate = () => {
   if (!authStore.user?.token) {
-    alert('Debes iniciar sesión para publicar una opinión.');
+    showLoginModal.value = true;
     return;
   }
   showReviewModal.value = true;

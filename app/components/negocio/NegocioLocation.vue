@@ -1,6 +1,10 @@
 <template>
-  <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mt-auto mb-4 shrink-0 mx-4 md:mx-0">
-    <h3 class="font-bold text-gray-800 mb-4 text-sm flex items-center gap-2 uppercase tracking-wide">
+  <div
+    class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mt-auto mb-4 shrink-0 mx-4 md:mx-0"
+  >
+    <h3
+      class="font-bold text-gray-800 mb-4 text-sm flex items-center gap-2 uppercase tracking-wide"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-5 w-5 text-gray-400"
@@ -17,12 +21,17 @@
     </h3>
 
     <div class="rounded-xl overflow-hidden border border-gray-100 mb-4">
-      <!-- Mapa -->
-      <div 
-        ref="mapContainer" 
-        @click="abrirEnGoogleMaps"
-        class="w-full h-48 bg-gray-100 cursor-pointer group"
-      ></div>
+      <div class="relative group">
+        <!-- Mapa -->
+        <div ref="mapContainer" class="w-full h-48 bg-gray-100"></div>
+
+        <!-- Overlay interceptor -->
+        <div
+          @click="abrirEnMapaNativo"
+          class="absolute inset-0 bg-transparent z-10 cursor-pointer"
+          title="Abrir en mapas"
+        ></div>
+      </div>
     </div>
 
     <!-- Dirección Texto -->
@@ -71,8 +80,8 @@ const initMap = () => {
     center: position,
     zoom: 15,
     disableDefaultUI: true,
-    zoomControl: false,       // Disable zoom control UI
-    gestureHandling: 'none',  // Disable all gestures (zoom, pan, scroll)
+    zoomControl: false, // Disable zoom control UI
+    gestureHandling: 'none', // Disable all gestures (zoom, pan, scroll)
     mapTypeControl: false,
     streetViewControl: false,
   });
@@ -84,10 +93,35 @@ const initMap = () => {
   });
 };
 
+const abrirEnMapaNativo = () => {
+  if (!props.negocio?.ubicacion?.coordinates) return;
+  const [lng, lat] = props.negocio.ubicacion.coordinates;
+  const label = props.negocio.nombre || 'Ubicación';
+
+  const isApple =
+    /iPad|iPhone|iPod|Mac/.test(navigator.userAgent) &&
+    !(window as any).MSStream;
+
+  if (isApple) {
+    window.open(
+      `maps://?q=${encodeURIComponent(label)}&ll=${lat},${lng}`,
+      '_blank'
+    );
+  } else {
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
+      '_blank'
+    );
+  }
+};
+
 const abrirEnGoogleMaps = () => {
   if (!props.negocio?.ubicacion?.coordinates) return;
   const [lng, lat] = props.negocio.ubicacion.coordinates;
-  window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`, '_blank');
+  window.open(
+    `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`,
+    '_blank'
+  );
 };
 
 const abrirEnWaze = () => {
@@ -99,7 +133,7 @@ const abrirEnWaze = () => {
 onMounted(() => {
   // Try to init map immediately
   initMap();
-  
+
   // If google maps is not loaded yet, retry every 500ms for a few seconds
   if (!window.google || !window.google.maps) {
     const interval = setInterval(() => {

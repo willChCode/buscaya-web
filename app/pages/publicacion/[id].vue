@@ -281,7 +281,11 @@ const handleCommentDelete = async (comment: any) => {
 };
 
 const submitComment = async () => {
-  if (!commentText.value.trim() || !authStore.user) return;
+  if (!commentText.value.trim()) return;
+  if (!authStore.user) {
+    showLoginModal.value = true;
+    return;
+  }
 
   submitting.value = true;
   try {

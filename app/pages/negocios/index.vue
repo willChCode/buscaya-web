@@ -191,8 +191,9 @@
           reservados.
         </p>
         <div class="flex space-x-4 mt-4 md:mt-0">
-          <a href="#" class="hover:text-white">Política de Privacidad</a>
-          <a href="#" class="hover:text-white">Términos de Servicio</a>
+          <NuxtLink to="/soporte" class="hover:text-white"
+            >Soporte y Ayuda</NuxtLink
+          >
         </div>
       </div>
     </div>

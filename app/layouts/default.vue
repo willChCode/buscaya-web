@@ -211,6 +211,27 @@
       </nav>
 
       <div class="mt-auto pt-6 border-t border-gray-100">
+        <NuxtLink
+          to="/soporte"
+          @click="showMenu = false"
+          class="flex items-center text-gray-500 hover:text-primary-500 transition-colors w-full mb-4 text-sm"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+          Soporte y Ayuda
+        </NuxtLink>
         <button
           @click="handleAuthAction"
           class="flex items-center text-gray-700 hover:text-primary-500 transition-colors w-full"
@@ -362,7 +383,7 @@
         >
       </nav>
       <div class="h-6 border-r border-gray-200"></div>
-      <span class="ml-4">
+      <span class="flex items-center ml-4 space-x-4">
         <button
           @click="handleAuthAction"
           class="flex items-center text-gray-700 hover:text-primary-500 transition duration-150"

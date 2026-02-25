@@ -158,7 +158,7 @@
     >
       <div class="flex items-center justify-between mb-8">
         <img
-          src="~assets/images/logo/logo-color.svg"
+          src="~/assets/images/logo/logo-color.svg"
           alt="Logo de la aplicación"
           class="h-7 w-auto"
         />
@@ -625,10 +625,10 @@
 <script setup>
 import { ref, onMounted, watch, nextTick } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useUbicacionNegocios } from '@/store/ubicacion.store';
-import { useAuthStore } from '@/stores/auth.store';
-import LoginModal from '@/components/auth/LoginModal.vue';
-import ChatWidget from '@/components/ChatWidget.vue';
+import { useUbicacionNegocios } from '~/store/ubicacion.store';
+import { useAuthStore } from '~/stores/auth.store';
+import LoginModal from '~/components/auth/LoginModal.vue';
+import ChatWidget from '~/components/ChatWidget.vue';
 
 const store = useUbicacionNegocios();
 const authStore = useAuthStore();

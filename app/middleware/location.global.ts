@@ -1,4 +1,4 @@
-import { useUbicacionNegocios } from '@/store/ubicacion.store';
+import { useUbicacionNegocios } from '~/store/ubicacion.store';
 
 export default defineNuxtRouteMiddleware((to, from) => {
   // Solo ejecutar en el cliente para evitar falsos positivos en SSR

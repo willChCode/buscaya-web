@@ -208,7 +208,7 @@
 </template>
 
 <script setup>
-import { useUbicacionNegocios } from '@/store/ubicacion.store';
+import { useUbicacionNegocios } from '~/store/ubicacion.store';
 import Card from '~/components/Card.vue';
 import CardPremium from '~/components/CardPremium.vue';
 import CardGrupo from '~/components/CardGrupo.vue';

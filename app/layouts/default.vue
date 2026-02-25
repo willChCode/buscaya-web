@@ -269,7 +269,7 @@
     <div class="flex items-center space-x-4 shrink-0">
       <NuxtLink to="/negocios">
         <img
-          src="~assets/images/logo/logo-color.svg"
+          src="~/assets/images/logo/logo-color.svg"
           alt="Logo de la aplicación"
           class="h-7 w-auto"
         />

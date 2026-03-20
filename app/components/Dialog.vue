@@ -59,7 +59,7 @@ const close = () => {
             <button
               v-if="!hideCloseButton"
               @click="close"
-              class="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 z-50 p-2 rounded-full bg-black/70 text-white hover:bg-black/90 transition-colors backdrop-blur-md cursor-pointer shadow-lg border border-white/20"
+              class="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 z-[100] p-2 xl:p-2.5 rounded-full bg-black/80 text-white hover:bg-black transition-colors backdrop-blur-md cursor-pointer shadow-xl border border-white/20"
               aria-label="Cerrar"
             >
               <svg

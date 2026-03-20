@@ -57,7 +57,7 @@
                 class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center"
               >
                 <svg
-                  v-if="dist === 20000"
+                  v-if="dist === 30000"
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-4 w-4 text-gray-600"
                   fill="none"
@@ -100,8 +100,8 @@
                 "
               >
                 {{
-                  dist === 20000
-                    ? 'Área Metropolitana (20km)'
+                  dist === 30000
+                    ? 'Área Metropolitana (30km)'
                     : `${dist / 1000} km a la redonda`
                 }}
               </span>
@@ -457,11 +457,11 @@ const settingsStore = useSettingsStore();
 const ubicacionStore = useUbicacionNegocios();
 
 // Local state for batch updates
-const localRadius = ref(ubicacionStore.filtros.radius || 20000);
+const localRadius = ref(ubicacionStore.filtros.radius || 30000);
 const localUnit = ref(settingsStore.distanceUnit);
 const isSaving = ref(false);
 
-const searchDistances = [3000, 5000, 10000, 20000];
+const searchDistances = [3000, 5000, 10000, 30000];
 
 // Only update local state
 const setSearchRadius = (radius: number) => {

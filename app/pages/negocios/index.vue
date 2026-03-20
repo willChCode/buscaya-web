@@ -55,7 +55,7 @@
         <template v-else>
           <component
             :is="getCardComponent(negocio)"
-            v-for="negocio in store.negociosHome"
+            v-for="negocio in store.negociosHome.slice(0, 10)"
             :key="negocio.id"
             :negocio="negocio"
             @click="openBusiness(negocio)"

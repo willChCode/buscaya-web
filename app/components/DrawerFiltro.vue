@@ -54,7 +54,7 @@
                   </h3>
                   <div class="flex flex-wrap gap-2">
                     <button
-                      v-for="opt in [3000, 5000, 10000, 20000]"
+                      v-for="opt in [3000, 5000, 10000, 30000]"
                       :key="opt"
                       @click="filtros.radius = opt"
                       :class="
@@ -254,7 +254,7 @@ const store = useUbicacionNegocios();
 const filtros = ref({
   abierto: '',
   giro: '',
-  radius: 3000,
+  radius: 30000,
   rating: 0,
 });
 
@@ -266,7 +266,7 @@ watch(
       filtros.value = {
         abierto: (store.filtros.abierto || '') as string,
         giro: store.filtros.giro || '',
-        radius: store.filtros.radius || 3000,
+        radius: store.filtros.radius || 30000,
         rating: store.filtros.rating || 0,
       };
     }
@@ -303,7 +303,7 @@ const limpiarFiltros = () => {
   filtros.value = {
     abierto: '',
     giro: '',
-    radius: 3000,
+    radius: 30000,
     rating: 0,
   };
 };

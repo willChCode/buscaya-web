@@ -35,7 +35,7 @@ export const useRevistaStore = defineStore('revista', {
       const API_BASE = config.public.apiBase;
 
       const ubicacionStore = useUbicacionNegocios();
-      const finalRadio = radio || ubicacionStore.filtros.radius || 3000;
+      const finalRadio = radio || ubicacionStore.filtros.radius || 30000;
 
       try {
         this.loading = true;

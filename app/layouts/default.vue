@@ -185,10 +185,10 @@
 
       <nav class="flex flex-col space-y-4">
         <NuxtLink
-          to="/negocios"
+          to="/resultados"
           @click="showMenu = false"
           class="text-lg font-medium text-gray-700 hover:text-primary-500 transition-colors"
-          :class="{ 'text-primary-500': route.path.startsWith('/negocios') }"
+          :class="{ 'text-primary-500': route.path.startsWith('/resultados') || route.path.startsWith('/negocios') }"
         >
           Negocios
         </NuxtLink>
@@ -352,9 +352,9 @@
       <!-- <div class="h-6 border-r border-gray-200"></div> -->
       <nav class="hidden md:flex items-center space-x-5 text-sm">
         <NuxtLink
-          to="/negocios"
+          to="/resultados"
           :class="[
-            route.path.startsWith('/negocios')
+            route.path.startsWith('/resultados') || route.path.startsWith('/negocios')
               ? 'text-primary-500 font-semibold'
               : 'text-gray-700',
             'hover:text-primary-500 transition duration-150 font-medium',

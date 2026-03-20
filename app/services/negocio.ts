@@ -27,6 +27,7 @@ export async function obtenerNegociosCercanos(
     day?: string;
     time?: string;
     search?: string;
+    page?: number;
   } = {}
 ): Promise<{ data: Negocio[]; meta: any }> {
   const config = useRuntimeConfig()
@@ -45,6 +46,7 @@ export async function obtenerNegociosCercanos(
   if (filters.day) params.append('day', filters.day);
   if (filters.time) params.append('time', filters.time);
   if (filters.search) params.append('search', filters.search);
+  if (filters.page) params.append('page', filters.page.toString());
 
   const url = `${API_BASE}/negocios/cercanos?${params.toString()}`;
 

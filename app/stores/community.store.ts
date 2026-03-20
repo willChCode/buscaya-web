@@ -56,7 +56,7 @@ export const useCommunityStore = defineStore('community', {
       this.error = null;
 
       try {
-        const dist = ubicacionStore.filtros.radius || 3000;
+        const dist = ubicacionStore.filtros.radius || 30000;
         const url = `${API_BASE}/comunidad/feed?lat=${lat}&lng=${lng}&dist=${dist}&page=${targetPage}`;
 
         const response: any = await $fetch(url);

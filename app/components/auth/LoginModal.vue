@@ -488,7 +488,10 @@ const renderTurnstile = () => {
           turnstileToken.value = '';
           errorMessage.value =
             'Error en la verificación de seguridad. Intenta de nuevo.';
-          // Don't close progress automatically, let user see error
+          setTimeout(() => {
+            closeProgress();
+            closeModal();
+          }, 2000);
         },
       }
     );
@@ -610,8 +613,12 @@ const handleFinalSubmit = async () => {
     closeModal();
   } catch (error: any) {
     errorMessage.value = error.message || 'Ocurrió un error inesperado';
-    // Stay on error state in overlay
-    // showProgress.value = false; // Optional: Keep showing progress with error so user can "Back"
+    
+    // Auto-close modal after 2 seconds on error
+    setTimeout(() => {
+      closeProgress();
+      closeModal();
+    }, 2000);
   } finally {
     loading.value = false;
     // If successful, modal closes. If error, loading stops, error shows.

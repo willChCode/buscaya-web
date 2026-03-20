@@ -17,7 +17,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
       search: '',
       giro: '',
       abierto: '' as '' | 'abierto' | 'cerrado',
-      radius: 3000,
+      radius: 30000,
       rating: 0,
       openNow: false,
       day: undefined as string | undefined,
@@ -30,6 +30,8 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
     negocios: [] as Negocio[],
     negociosFitlrados: [] as Negocio[],
     totalNegocios: 0,
+    page: 1,
+    hasMore: false,
 
     // Separated state for Home Page (Unfiltered)
     negociosHome: [] as Negocio[],
@@ -92,7 +94,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
         const { lat, lng } = this.ubicacion;
 
         // base de datos
-        const distanciaEnMetros = this.filtros.radius || 3000;
+        const distanciaEnMetros = this.filtros.radius || 30000;
         const apiFilters = {
           rating: this.filtros.rating > 0 ? this.filtros.rating : undefined,
           group: this.filtros.giro || undefined,
@@ -102,6 +104,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
           time:
             this.filtros.abierto === 'abierto' ? this.filtros.time : undefined,
           search: this.filtros.search || undefined,
+          page: 1,
         };
 
         const res = await obtenerNegociosCercanos(
@@ -115,11 +118,47 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
         // as the backend has already filtered them.
         this.negociosFitlrados = res.data;
         this.totalNegocios = res.meta.total;
+        this.page = 1;
+        this.hasMore = res.meta.page < res.meta.lastPage;
 
         this.lastUpdate = Date.now();
       } catch (e: any) {
         this.error = e.message;
         console.error('Error actualizarDatos:', e);
+      } finally {
+        this.cargando = false;
+      }
+    },
+
+    async cargarMas() {
+      if (!this.hasMore || this.cargando || !this.ubicacion) return;
+
+      this.cargando = true;
+      this.error = null;
+
+      try {
+        const { lat, lng } = this.ubicacion;
+        const distanciaEnMetros = this.filtros.radius || 30000;
+        const nextPage = this.page + 1;
+        const apiFilters = {
+          rating: this.filtros.rating > 0 ? this.filtros.rating : undefined,
+          group: this.filtros.giro || undefined,
+          openNow: this.filtros.abierto === 'abierto',
+          day: this.filtros.abierto === 'abierto' ? this.filtros.day : undefined,
+          time: this.filtros.abierto === 'abierto' ? this.filtros.time : undefined,
+          search: this.filtros.search || undefined,
+          page: nextPage,
+        };
+
+        const res = await obtenerNegociosCercanos(lat, lng, distanciaEnMetros, apiFilters);
+
+        this.negocios = [...this.negocios, ...res.data];
+        this.negociosFitlrados = [...this.negociosFitlrados, ...res.data];
+        this.page = nextPage;
+        this.hasMore = res.meta.page < res.meta.lastPage;
+      } catch (e: any) {
+        this.error = e.message;
+        console.error('Error cargarMas:', e);
       } finally {
         this.cargando = false;
       }
@@ -135,7 +174,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
       this.cargando = true;
       try {
         const { lat, lng } = this.ubicacion;
-        const distanciaEnMetros = 4000; // radio para negocios home
+        const distanciaEnMetros = 30000; // radio para negocios home
 
         // Solo filtros basicos "Home": Sin categoria, sin search
         // Tal vez si queremos respetar "Abierto ahora" si es muy importante, pero el usuario pidio que no afecte.
@@ -179,7 +218,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
         search: '',
         giro: '',
         abierto: '',
-        radius: 3000,
+        radius: 30000,
         rating: 0,
         openNow: false,
         day: undefined,

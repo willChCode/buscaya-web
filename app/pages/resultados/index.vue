@@ -6,7 +6,7 @@
       <span class="flex gap-2 justify-center items-center">
         <h1 class="text-xl font-bold">{{ pageTitle }}</h1>
         <p class="text-lg text-gray-700 mt-[1px] hidden md:block">
-          ({{ store.negociosFitlrados?.length }} Resultados)
+          ({{ store.totalNegocios }} Resultados)
         </p>
       </span>
 
@@ -127,9 +127,9 @@
   </div>
 
   <div class="py-4 w-full max-w-full overflow-hidden">
-    <!-- Loading State -->
+    <!-- Loading State FIRST TIME ONLY -->
     <div
-      v-if="store.cargando"
+      v-if="store.cargando && (!store.negociosFitlrados || store.negociosFitlrados.length === 0)"
       class="grid gap-2 md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-3 md:px-6"
     >
       <BusinessSkeleton v-for="n in 8" :key="n" class="w-full mx-auto" />
@@ -137,7 +137,7 @@
 
     <!-- Empty State (Only if not loading) -->
     <div
-      v-else-if="store.negociosFitlrados?.length === 0"
+      v-else-if="!store.cargando && store.negociosFitlrados?.length === 0"
       class="text-center py-10 px-4 md:px-6"
     >
       <p>No se encontraron resultados para tu búsqueda.</p>
@@ -146,7 +146,6 @@
     <!-- Results (Only if not loading) -->
     <div
       v-else
-      v-if="store.negociosFitlrados?.length > 0"
       class="grid gap-[6px] md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-[9px] md:px-6"
     >
       <component
@@ -159,6 +158,21 @@
         class="w-full mx-auto"
         @click="openBusiness(negocio)"
       />
+    </div>
+
+    <!-- Cargar más button -->
+    <div v-if="store.hasMore" class="w-full flex justify-center py-6 mt-4">
+      <button 
+        @click="store.cargarMas()" 
+        class="px-6 py-2.5 bg-primary-500 text-white font-bold rounded-full shadow-md hover:bg-primary-600 active:scale-95 transition-all text-sm flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        :disabled="store.cargando"
+      >
+        <svg v-if="store.cargando" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        {{ store.cargando ? 'Cargando...' : 'Cargar más resultados' }}
+      </button>
     </div>
   </div>
 

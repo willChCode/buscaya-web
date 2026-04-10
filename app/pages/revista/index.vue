@@ -117,8 +117,8 @@ definePageMeta({
           :class="[
             'group relative rounded-[15px] md:rounded-[1.3rem] overflow-hidden cursor-pointer shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300',
             ad.plan === 'premium'
-              ? 'col-span-2 h-[250px] md:h-[450px]'
-              : 'col-span-1 h-[320px] md:h-[500px]',
+              ? 'col-span-2 aspect-[16/10.4] md:aspect-[16/10.4]'
+              : 'col-span-1 aspect-[3/4.4] md:aspect-[3/4.4]',
           ]"
         >
           <img

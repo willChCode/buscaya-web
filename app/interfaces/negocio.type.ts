@@ -36,6 +36,9 @@ export interface Contacto {
   whatsapp?: number | null
   facebook?: string | null
   instagram?: string | null
+  tiktok?: string | null
+  pagina_web?: string | null
+  web?: string | null
 }
 
 /**
@@ -45,7 +48,6 @@ export interface Producto {
   nombre: string
   precio: number
   descripcion: string
-  descripcionCorta: string
   foto: string | { url: string }
 }
 
@@ -92,7 +94,6 @@ export interface Negocio {
   colonia: string // El nombre de la colonia
 
   // --- Campos nuevos ---
-  descripcionCorta?: string
   descripcion?: string
   horarios: Horarios
   colores?: Colores

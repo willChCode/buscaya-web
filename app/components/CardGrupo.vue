@@ -39,15 +39,20 @@ const goToCategoryResults = (nombre) => {
 <template>
   <div
     @click="goToCategoryResults(grupo.nombre)"
-    class="rounded-md w-[90px] md:w-[135px] flex-shrink-0 cursor-pointer transition duration-300"
+    class="flex flex-col items-center gap-1.5 w-16 md:w-20 flex-shrink-0 cursor-pointer group animate-fade-in-up"
+    :style="{ animationDelay: `${grupo.id * 40}ms` }"
   >
-    <img
-      :src="grupo.imagen"
-      alt=""
-      class="h-16 md:h-20 m-auto object-cover rounded-lg"
-    />
+    <div
+      class="w-14 h-14 md:w-16 md:h-16 rounded-full bg-gray-50 ring-1 ring-gray-100 group-hover:bg-gray-100 group-hover:ring-gray-200 group-hover:scale-105 group-hover:-translate-y-0.5 flex items-center justify-center overflow-hidden transition-all duration-200"
+    >
+      <img
+        :src="grupo.imagen"
+        alt=""
+        class="h-8 w-8 md:h-14 md:w-14 object-contain"
+      />
+    </div>
     <p
-      class="text-center text-[12px] md:text-[13px] font-semibold leading-[1.3] py-1"
+      class="text-center text-[11px] md:text-xs font-semibold leading-tight text-gray-700 line-clamp-2"
     >
       {{ grupo.nombre }}
     </p>

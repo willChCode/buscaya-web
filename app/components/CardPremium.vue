@@ -29,15 +29,15 @@ const formattedDistance = computed(() => {
 
 <template>
   <div
-    class="flex-shrink-0 cursor-pointer bg-white rounded-xl border border-gray-200 hover:shadow-lg transition duration-300"
+    class="flex-shrink-0 cursor-pointer bg-white rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     :class="fullWidth ? 'w-full' : 'w-[285px]'"
   >
-    <div class="relative">
+    <div class="relative overflow-hidden rounded-t-xl">
       <img
         :src="negocio?.portada?.url || 'https://placehold.co/600x400'"
         :alt="negocio?.nombre"
         :class="compactMode ? 'h-[130px] md:h-[155px]' : 'h-[155px]'"
-        class="w-full object-cover rounded-t-xl bg-gray-100"
+        class="w-full object-cover bg-gray-100 transition-transform duration-500 hover:scale-105"
       />
 
       <!-- Sponsored Badge - TOP LEFT -->

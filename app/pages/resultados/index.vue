@@ -126,10 +126,45 @@
     </div>
   </div>
 
+  <!-- Subcategories Horizontal List -->
+  <div v-if="currentSubcategories.length > 0" class="w-full bg-white border-b border-gray-100 overflow-x-auto no-scrollbar shadow-sm">
+    <div class="flex items-start gap-4 px-4 md:px-6 py-4 min-w-max">
+      <!-- "Todos" button -->
+      <button 
+        @click="selectSubcategory('')"
+        class="flex flex-col items-center justify-start gap-1 w-[70px] transition-all group"
+      >
+        <div 
+          class="w-14 h-14 rounded-full flex items-center justify-center transition-all"
+          :class="!store.filtros.categoria ? 'bg-primary-500 shadow-md scale-105' : 'bg-gray-50 border border-gray-100 group-hover:bg-gray-100'"
+        >
+          <Icon name="ion:grid" class="w-6 h-6" :class="!store.filtros.categoria ? 'text-white' : 'text-gray-400'" />
+        </div>
+        <span class="text-[11px] mt-1 text-center leading-tight" :class="!store.filtros.categoria ? 'text-primary-600 font-bold' : 'text-gray-500 font-medium'">Todos</span>
+      </button>
+
+      <!-- Subcategory buttons -->
+      <button 
+        v-for="sub in currentSubcategories" 
+        :key="sub.nombre"
+        @click="selectSubcategory(sub.nombre)"
+        class="flex flex-col items-center justify-start gap-1 w-[70px] transition-all group"
+      >
+        <div 
+          class="w-14 h-14 rounded-full flex items-center justify-center transition-all"
+          :class="store.filtros.categoria === sub.nombre ? 'bg-primary-500 shadow-md scale-105' : 'bg-gray-50 border border-gray-100 group-hover:bg-gray-100'"
+        >
+          <Icon :name="'ion:' + sub.icono" class="w-6 h-6" :class="store.filtros.categoria === sub.nombre ? 'text-white' : 'text-gray-400'" />
+        </div>
+        <span class="text-[11px] mt-1 text-center leading-tight" :class="store.filtros.categoria === sub.nombre ? 'text-primary-600 font-bold' : 'text-gray-500 font-medium'">{{ sub.nombre }}</span>
+      </button>
+    </div>
+  </div>
+
   <div class="py-4 w-full max-w-full overflow-hidden">
-    <!-- Loading State FIRST TIME ONLY -->
+    <!-- Loading State for new searches/filters -->
     <div
-      v-if="store.cargando && (!store.negociosFitlrados || store.negociosFitlrados.length === 0)"
+      v-if="store.cargando && store.page === 1"
       class="grid gap-2 md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-3 md:px-6"
     >
       <BusinessSkeleton v-for="n in 8" :key="n" class="w-full mx-auto" />
@@ -143,7 +178,7 @@
       <p>No se encontraron resultados para tu búsqueda.</p>
     </div>
 
-    <!-- Results (Only if not loading) -->
+    <!-- Results (Only if not loading a new page 1) -->
     <div
       v-else
       class="grid gap-[6px] md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-[9px] md:px-6"
@@ -211,9 +246,12 @@ const isOpen = ref(false);
 const isFilterOpen = ref(false);
 
 // Función que llama el @click de la Card
+import { crearSlug } from '~/utils/helpers';
+
 const openBusiness = (negocio: any) => {
-  selectedNegocio.value = negocio;
-  isOpen.value = true;
+  const slug = crearSlug(negocio.nombre);
+  const id = negocio._id || negocio.id;
+  router.push({ path: `/${slug}`, query: { id } });
 };
 
 // --- Helper: Normalización de Texto ---
@@ -236,48 +274,80 @@ const catParam = computed(() =>
 
 // --- Título Dinámico ---
 const pageTitle = computed(() => {
-  const rawQuery = route.query.search as string;
-  const rawCat = route.query.category as string;
+  // Si hay una subcategoría seleccionada, la mostramos
+  if (store.filtros.categoria) return store.filtros.categoria;
 
-  const texto = rawCat?.replace(/-/g, ' ') || rawQuery || 'Resultados';
-  return texto.charAt(0).toUpperCase() + texto.slice(1);
+  // Si hay un giro (categoría principal), lo mostramos
+  if (store.filtros.giro) return store.filtros.giro;
+
+  // Si hay búsqueda en URL
+  const rawQuery = route.query.search as string;
+  if (rawQuery) {
+    return rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1);
+  }
+
+  // Si hay categoría en URL (legacy)
+  const rawCat = route.query.category as string;
+  if (rawCat) {
+    const texto = rawCat.replace(/-/g, ' ');
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
+  }
+
+  return 'Resultados';
 });
 
 // --- Filtros Activos ---
 const activeFilters = computed(() => {
-  const filters = [];
-  const f = store.filtros;
+  const filters: { id: string; label: string }[] = [];
 
-  if (f.giro) {
-    filters.push({ id: 'giro', label: f.giro });
+  if (store.filtros.giro) {
+    filters.push({ id: 'giro', label: store.filtros.giro });
   }
-  if (f.abierto === 'abierto') {
+
+  if (store.filtros.categoria) {
+    filters.push({ id: 'categoria', label: store.filtros.categoria });
+  }
+
+  if (store.filtros.abierto === 'abierto') {
     filters.push({ id: 'abierto', label: 'Abierto ahora' });
-  } else if (f.abierto === 'cerrado') {
-    filters.push({ id: 'abierto', label: 'Cerrado' });
-  }
-  if (f.rating > 0) {
-    filters.push({ id: 'rating', label: `${f.rating}+ Estrellas` });
   }
 
   return filters;
 });
 
+// --- Manejo de Filtros y Subcategorías ---
+import { GRUPOS_CATEGORIAS_UNIFICADOS } from '~/utils/categories';
+
+const currentSubcategories = computed(() => {
+  if (!store.filtros.giro) return [];
+  const grupo = GRUPOS_CATEGORIAS_UNIFICADOS.find(g => g.nombre === store.filtros.giro);
+  return grupo ? grupo.subcategorias : [];
+});
+
+const selectSubcategory = (subcat: string) => {
+  store.filtros.categoria = store.filtros.categoria === subcat ? '' : subcat;
+  store.page = 1;
+  store.actualizarDatos(true);
+};
+
 const removeFilter = async (id: string) => {
   if (id === 'giro') {
-    store.setFiltros({ giro: '' });
+    store.setFiltros({ giro: '', categoria: '' });
     // Also remove from URL if present
     if (route.query.category) {
       const newQuery = { ...route.query };
       delete newQuery.category;
       await router.push({ query: newQuery });
     }
+  } else if (id === 'categoria') {
+    store.setFiltros({ categoria: '' });
   } else if (id === 'abierto') {
     store.setFiltros({ abierto: '' });
   } else if (id === 'rating') {
     store.setFiltros({ rating: 0 });
   }
 
+  store.page = 1;
   await store.actualizarDatos(true);
 };
 

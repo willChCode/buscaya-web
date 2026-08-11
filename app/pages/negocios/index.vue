@@ -1,11 +1,24 @@
 <template>
   <div class="pt-5 px-3 md:px-6">
     <!-- BODY -->
-    <!-- GRUPOSS & CATEGORIAS -->
-    <div class="mt-2 md:mt-5">
-      <CarouselSection title="Hola. Que vas a buscar hoy?" gapClass="gap-2">
-        <CardGrupo v-for="grupo in grupos" :key="grupo.id" :grupo="grupo" />
-      </CarouselSection>
+    <!-- HERO BANNER + CATEGORIAS (superpuestas) -->
+    <div class="relative">
+      <HeroBanner />
+
+      <div class="relative z-10 -mt-20 md:-mt-28 mx-4 md:mx-10">
+        <div
+          class="bg-white rounded-2xl shadow-lg shadow-black/5 border border-gray-100 px-6 pt-5 pb-5 md:px-8 md:pt-6 md:pb-6"
+        >
+          <CarouselSection
+            title="Explora por categorías"
+            linkTo="/resultados"
+            linkText="Ver todas"
+            gapClass="gap-4 md:gap-6"
+          >
+            <CardGrupo v-for="grupo in grupos" :key="grupo.id" :grupo="grupo" />
+          </CarouselSection>
+        </div>
+      </div>
     </div>
 
     <!-- NEGOCIOS CERCA -->
@@ -15,8 +28,9 @@
         :count="store.totalNegociosHome"
         linkTo="/resultados"
         linkText="Ver todos"
+        @link-click="handleClearFilters"
       >
-        <template v-if="store.cargando && store.negociosHome.length === 0">
+        <template v-if="store.cargando">
           <BusinessSkeleton
             v-for="n in 5"
             :key="n"
@@ -55,9 +69,11 @@
         <template v-else>
           <component
             :is="getCardComponent(negocio)"
-            v-for="negocio in store.negociosHome.slice(0, 10)"
+            v-for="(negocio, idx) in store.negociosHome.slice(0, 10)"
             :key="negocio.id"
             :negocio="negocio"
+            class="animate-fade-in-up"
+            :style="{ animationDelay: `${idx * 60}ms` }"
             @click="openBusiness(negocio)"
           />
         </template>
@@ -71,13 +87,21 @@
         linkTo="/revista"
         linkText="Ver revista"
       >
-        <CardPromo v-for="promo in promos" :key="promo.id" :promocion="promo" />
+        <CardPromo
+          v-for="(promo, idx) in promos"
+          :key="promo.id"
+          :promocion="promo"
+          class="animate-fade-in-up"
+          :style="{ animationDelay: `${idx * 70}ms` }"
+        />
       </CarouselSection>
     </div>
   </div>
 
   <!-- FOOTER NEGOCIOS (Full Width) -->
-  <div class="w-full bg-gray-900 text-gray-300 py-12 border-t border-gray-800">
+  <div
+    class="w-full bg-primary-950 text-white py-12 border-t border-primary-900/50"
+  >
     <div class="container mx-auto px-4 md:px-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 items-center">
         <!-- Columna 1: Logo / Info -->
@@ -95,7 +119,7 @@
             <!-- <span class="text-2xl font-bold text-white tracking-tight">Buscaya Negocios</span> -->
           </div>
           <p
-            class="text-gray-400 text-sm leading-relaxed mb-6 max-w-sm font-light mx-auto md:mx-0"
+            class="text-gray-300 text-[13.5px] leading-relaxed mb-6 max-w-sm font-light mx-auto md:mx-0"
           >
             La plataforma líder para conectar negocios locales con clientes en
             tiempo real. Descubre, conecta y crece con nosotros.
@@ -105,7 +129,7 @@
             <a
               href="https://www.facebook.com/buscaya.nl/"
               target="_blank"
-              class="text-gray-400 hover:text-white transition-colors"
+              class="text-gray-100 hover:text-white transition-colors"
             >
               <svg
                 class="h-6 w-6 -mt-[2px]"
@@ -121,7 +145,7 @@
             <a
               href="https://www.instagram.com/buscaya.mx"
               target="_blank"
-              class="text-gray-400 hover:text-white transition-colors"
+              class="text-gray-100 hover:text-white transition-colors"
             >
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -133,7 +157,7 @@
             <a
               href="https://wa.me/528110720923"
               target="_blank"
-              class="text-gray-400 hover:text-white transition-colors"
+              class="text-gray-100 hover:text-white transition-colors"
             >
               <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path
@@ -155,7 +179,7 @@
             <span class="text-[#FFD100]">siguiente nivel</span>
           </h4>
           <p
-            class="text-gray-400 text-sm mb-8 max-w-lg leading-relaxed font-light mx-auto md:mr-0"
+            class="text-gray-300 text-[13.5px] mb-8 max-w-lg leading-relaxed font-light mx-auto md:mr-0"
           >
             Únete a la plataforma de mayor crecimiento. Destaca con un perfil
             profesional y llega directo a los clientes que buscan lo que
@@ -184,7 +208,7 @@
       </div>
 
       <div
-        class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500"
+        class="border-t border-primary-900/50 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-300"
       >
         <p>
           &copy; {{ new Date().getFullYear() }} Buscaya Inc. Todos los derechos
@@ -216,6 +240,8 @@ import CardPromo from '~/components/CardPromo.vue';
 import CarouselSection from '~/components/CarouselSection.vue';
 import DrawerNegocio from '~/components/DrawerNegocio.vue';
 import BusinessSkeleton from '~/components/BusinessSkeleton.vue';
+import HeroBanner from '~/components/home/HeroBanner.vue';
+import { crearSlug } from '~/utils/helpers';
 
 // Remove default layout padding to allow full-width footer
 definePageMeta({
@@ -236,8 +262,14 @@ const router = useRouter();
 const store = useUbicacionNegocios();
 
 const openBusiness = (negocio) => {
-  selectedNegocio.value = negocio;
-  isOpen.value = true;
+  const slug = crearSlug(negocio.nombre);
+  const id = negocio._id || negocio.id;
+  router.push({ path: `/${slug}`, query: { id } });
+};
+
+const handleClearFilters = () => {
+  // Limpiamos la categoría para que al ir a resultados muestre "Todos"
+  store.setFiltros({ giro: '', categoria: '', search: '' });
 };
 
 onMounted(() => {
@@ -254,101 +286,49 @@ const grupos = [
     nombre: 'Servicios Profesionales',
     imagen: '/categorias/profesionistas.png',
   },
-  {
-    id: 2,
-    nombre: 'Comida y Bebida',
-    imagen: '/categorias/Comida.png',
-  },
-  {
-    id: 3,
-    nombre: 'Hogar y Construcción',
-    imagen: '/categorias/Hogar.png',
-  },
-  {
-    id: 4,
-    nombre: 'Tiendas Locales',
-    imagen: '/categorias/Tiendas.png',
-  },
+  { id: 2, nombre: 'Salud y Medicina', imagen: '/categorias/Salud.png' },
+  { id: 3, nombre: 'Comida y Bebida', imagen: '/categorias/Comida.png' },
+  { id: 4, nombre: 'Comercio Local', imagen: '/categorias/Tiendas.png' },
   {
     id: 5,
-    nombre: 'Salud y Médicos',
-    imagen: '/categorias/Salud.png',
-  },
-  {
-    id: 6,
-    nombre: 'Belleza y Estética',
-    imagen: '/categorias/Belleza.png',
-  },
-  {
-    id: 7,
-    nombre: 'Fiestas y Eventos',
-    imagen: '/categorias/Eventos.png',
-  },
-  {
-    id: 8,
-    nombre: 'Automotriz',
-    imagen: '/categorias/Mecanico.png',
-  },
-  {
-    id: 9,
-    nombre: 'Mascotas',
+    nombre: 'Mascotas y Veterinaria',
     imagen: '/categorias/Mascotas.png',
   },
+  { id: 6, nombre: 'Moda y Estilo', imagen: '/categorias/ropa.png' },
   {
-    id: 10,
-    nombre: 'Ropa y Accesorios',
-    imagen: '/categorias/ropa.png',
-  },
-  {
-    id: 11,
-    nombre: 'Papelerías y Oficinas',
+    id: 7,
+    nombre: 'Tecnología y Oficina',
     imagen: '/categorias/papelerias.png',
   },
-  {
-    id: 12,
-    nombre: 'Alojamiento y Transporte',
-    imagen: '/categorias/Hospedajes.png',
-  },
-  {
-    id: 13,
-    nombre: 'Bancos y Finanzas',
-    imagen: '/categorias/bancos.png',
-  },
-  {
-    id: 14,
-    nombre: 'Deporte y Gimnasios',
-    imagen: '/categorias/deportes.png',
-  },
-  {
-    id: 15,
-    nombre: 'Muebles y Decoración',
-    imagen: '/categorias/muebles.png',
-  },
+  { id: 8, nombre: 'Viajes y Hospedaje', imagen: '/categorias/Hospedajes.png' },
+  { id: 9, nombre: 'Mundo Automotriz', imagen: '/categorias/Mecanico.png' },
+  { id: 10, nombre: 'Servicios Técnicos', imagen: '/categorias/Hogar.png' },
+  { id: 11, nombre: 'Estética y Belleza', imagen: '/categorias/Belleza.png' },
+  { id: 12, nombre: 'Eventos y Fiestas', imagen: '/categorias/Eventos.png' },
+  { id: 13, nombre: 'Finanzas y Seguros', imagen: '/categorias/bancos.png' },
+  { id: 14, nombre: 'Fitness y Deportes', imagen: '/categorias/deportes.png' },
+  { id: 15, nombre: 'Hogar y Muebles', imagen: '/categorias/muebles.png' },
 ];
 const promos = [
   {
     id: 1,
-    imagen: '/banner/revista-3.webp',
+    imagen: '/banner/1.jpg',
   },
   {
     id: 2,
-    imagen: '/banner/revista-2.webp',
+    imagen: '/banner/2.jpg',
   },
   {
     id: 3,
-    imagen: '/banner/revista-1.webp',
+    imagen: '/banner/4.jpg',
   },
-  // {
-  //   id: 4,
-  //   imagen: 'https://picsum.photos/400/300?random=1',
-  // },
-  // {
-  //   id: 5,
-  //   imagen: 'https://picsum.photos/400/300?random=1',
-  // },
-  // {
-  //   id: 6,
-  //   imagen: 'https://picsum.photos/400/300?random=1',
-  // },
+  {
+    id: 4,
+    imagen: '/banner/5.jpg',
+  },
+  {
+    id: 5,
+    imagen: '/banner/3.jpg',
+  },
 ];
 </script>

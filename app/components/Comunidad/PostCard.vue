@@ -88,11 +88,11 @@
     <!-- Image -->
     <div
       v-if="post.image"
-      class="mx-4 md:mx-5 mb-4 md:mb-5 rounded-2xl overflow-hidden bg-gray-50 relative group"
+      class="mx-4 md:mx-5 mb-4 md:mb-5 rounded-2xl overflow-hidden bg-gray-50 relative group flex justify-center"
     >
       <img
         :src="post.image"
-        class="w-full h-auto max-h-[280px] sm:max-h-[500px] object-cover transition-transform duration-700 group-hover:scale-105"
+        class="w-full h-auto max-h-[400px] sm:max-h-[600px] object-contain"
         alt="Post Image"
       />
     </div>

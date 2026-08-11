@@ -16,6 +16,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
     filtros: {
       search: '',
       giro: '',
+      categoria: '',
       abierto: '' as '' | 'abierto' | 'cerrado',
       radius: 30000,
       rating: 0,
@@ -86,6 +87,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
 
       this.cargando = true;
       this.error = null;
+      this.page = 1;
 
       try {
         if (!this.ubicacion)
@@ -95,6 +97,11 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
 
         // base de datos
         const distanciaEnMetros = this.filtros.radius || 30000;
+        const searchTerms = [this.filtros.search, this.filtros.categoria]
+          .map(s => (s || '').trim())
+          .filter(Boolean)
+          .join(' ');
+
         const apiFilters = {
           rating: this.filtros.rating > 0 ? this.filtros.rating : undefined,
           group: this.filtros.giro || undefined,
@@ -103,7 +110,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
             this.filtros.abierto === 'abierto' ? this.filtros.day : undefined,
           time:
             this.filtros.abierto === 'abierto' ? this.filtros.time : undefined,
-          search: this.filtros.search || undefined,
+          search: searchTerms || undefined,
           page: 1,
         };
 
@@ -217,6 +224,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
       this.filtros = {
         search: '',
         giro: '',
+        categoria: '',
         abierto: '',
         radius: 30000,
         rating: 0,

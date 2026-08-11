@@ -1,7 +1,27 @@
 <template>
+  <!-- Top Marquee Banner -->
+  <div class="bg-primary-950 text-white overflow-hidden py-2 border-b border-primary-900/50 z-[60] relative flex items-center w-full">
+    <div class="marquee-content flex gap-6 text-[11px] md:text-xs font-medium tracking-wide items-center whitespace-nowrap">
+      <!-- First set -->
+      <span class="flex items-center gap-2">✨ La mejor plataforma para encontrar cualquier negocio cerca de ti</span>
+      <span class="text-primary-700 select-none">|</span>
+      <span class="flex items-center gap-2">🚀 Regístrate y publica tu negocio 100% GRATIS</span>
+      <span class="text-primary-700 select-none">|</span>
+      <span class="flex items-center gap-2">🌟 Explora miles de opciones locales al instante</span>
+      <span class="text-primary-700 select-none">|</span>
+      <!-- Second set (Duplicated for seamless loop) -->
+      <span class="flex items-center gap-2">✨ La mejor plataforma para encontrar cualquier negocio cerca de ti</span>
+      <span class="text-primary-700 select-none">|</span>
+      <span class="flex items-center gap-2">🚀 Regístrate y publica tu negocio 100% GRATIS</span>
+      <span class="text-primary-700 select-none">|</span>
+      <span class="flex items-center gap-2">🌟 Explora miles de opciones locales al instante</span>
+      <span class="text-primary-700 select-none">|</span>
+    </div>
+  </div>
+
   <!-- Mobile Header -->
   <div
-    class="sticky top-0 flex md:hidden flex-col w-full bg-white shadow-sm z-50"
+    class="sticky top-0 flex md:hidden flex-col w-full bg-white shadow-sm z-50 animate-fade-in-down"
   >
     <!-- Top Bar: Hamburger, Search, User -->
     <div
@@ -188,7 +208,7 @@
           to="/resultados"
           @click="showMenu = false"
           class="text-lg font-medium text-gray-700 hover:text-primary-500 transition-colors"
-          :class="{ 'text-primary-500': route.path.startsWith('/resultados') || route.path.startsWith('/negocios') }"
+          :class="{ 'text-primary-500': route.path.startsWith('/resultados') }"
         >
           Negocios
         </NuxtLink>
@@ -236,11 +256,10 @@
           @click="handleAuthAction"
           class="flex items-center text-gray-700 hover:text-primary-500 transition-colors w-full"
         >
-          <img
+          <Icon
             v-if="!authStore.user"
-            class="h-6 w-6 mr-3"
-            src="http://solutiai.com/wp-content/uploads/2025/11/user-alt-1-svgrepo-com.svg"
-            alt=""
+            name="ion:person-outline"
+            class="h-6 w-6 mr-3 text-gray-700"
           />
           <img
             v-else
@@ -264,7 +283,7 @@
   </div>
 
   <nav
-    class="sticky top-0 z-40 hidden md:flex items-center justify-between h-16 px-6 border-b border-gray-100 bg-white shadow-sm"
+    class="sticky top-0 z-40 hidden md:flex items-center justify-between h-16 px-6 border-b border-gray-100 bg-white shadow-sm animate-fade-in-down"
   >
     <div class="flex items-center space-x-4 shrink-0">
       <NuxtLink to="/negocios">
@@ -339,10 +358,9 @@
           @click="handleSearch"
           class="absolute right-0 h-full w-12 bg-primary-500 flex items-center justify-center hover:bg-primary-700 transition duration-150"
         >
-          <img
-            class="h-[26px] w-[26px]"
-            src="http://solutiai.com/wp-content/uploads/2025/11/search-svgrepo-com-1.svg"
-            alt=""
+          <Icon
+            name="ion:search"
+            class="h-5 w-5 text-white"
           />
         </button>
       </div>
@@ -354,7 +372,7 @@
         <NuxtLink
           to="/resultados"
           :class="[
-            route.path.startsWith('/resultados') || route.path.startsWith('/negocios')
+            route.path.startsWith('/resultados')
               ? 'text-primary-500 font-semibold'
               : 'text-gray-700',
             'hover:text-primary-500 transition duration-150 font-medium',
@@ -388,11 +406,10 @@
           @click="handleAuthAction"
           class="flex items-center text-gray-700 hover:text-primary-500 transition duration-150"
         >
-          <img
+          <Icon
             v-if="!authStore.user"
-            class="h-[20px] w-[20px] mr-1"
-            src="http://solutiai.com/wp-content/uploads/2025/11/user-alt-1-svgrepo-com.svg"
-            alt=""
+            name="ion:person-outline"
+            class="h-5 w-5 mr-1"
           />
           <img
             v-else
@@ -415,7 +432,7 @@
     </div>
   </nav>
 
-  <main class="min-h-screen" :class="route.meta.paddingClass || 'px-3 md:px-6'">
+  <main class="min-h-[calc(100vh-110px)] flex flex-col" :class="route.meta.paddingClass || 'px-3 md:px-6'">
     <slot />
   </main>
 
@@ -695,6 +712,13 @@ const handleAuthAction = () => {
 // --- Lógica del Buscador Principal ---
 const handleSearch = () => {
   if (searchQuery.value.trim() !== '') {
+    // Al buscar globalmente, limpiamos los filtros de categoría
+    store.setFiltros({
+      giro: '',
+      categoria: '',
+      search: searchQuery.value.trim(),
+    });
+
     router.push({
       path: '/resultados',
       query: { search: searchQuery.value.trim() },
@@ -704,10 +728,14 @@ const handleSearch = () => {
 
 const handleClearSearch = () => {
   searchQuery.value = '';
+  store.setFiltros({ search: '' });
+  
   if (route.path.startsWith('/resultados')) {
+    const newQuery = { ...route.query };
+    delete newQuery.search;
     router.push({
       path: '/resultados',
-      query: { ...route.query, search: undefined },
+      query: newQuery,
     });
   }
 };
@@ -881,3 +909,20 @@ onMounted(async () => {
   loadGoogleMaps();
 });
 </script>
+
+<style scoped>
+.marquee-content {
+  display: flex;
+  width: max-content;
+  animation: marquee-slide 30s linear infinite;
+}
+
+@keyframes marquee-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+</style>

@@ -29,19 +29,31 @@ const formattedDistance = computed(() => {
     if (dist < 1000) return `${Math.round(dist)}m`;
     return `${(dist / 1000).toFixed(1)}km`;
 });
+
+const maxDiscount = computed(() => {
+  if (!props.negocio.productos || !props.negocio.productos.length) return 0;
+  let maxDesc = 0;
+  for (const prod of props.negocio.productos) {
+    if (prod.precioOferta && prod.precio > 0) {
+      const desc = Math.round((1 - prod.precioOferta / prod.precio) * 100);
+      if (desc > maxDesc) maxDesc = desc;
+    }
+  }
+  return maxDesc;
+});
 </script>
 
 <template>
   <div
-    class="flex-shrink-0 cursor-pointer bg-white rounded-xl border border-gray-200 hover:shadow-lg transition duration-300"
+    class="flex-shrink-0 cursor-pointer bg-white rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     :class="fullWidth ? 'w-full' : 'w-[285px]'"
   >
-    <div class="relative">
+    <div class="relative overflow-hidden rounded-t-xl">
       <img
         :src="negocio?.portada?.url || 'https://placehold.co/600x400'"
         :alt="negocio?.nombre"
         :class="compactMode ? 'h-[130px] md:h-[155px]' : 'h-[155px]'"
-        class="w-full object-cover rounded-t-xl bg-gray-100"
+        class="w-full object-cover bg-gray-100 transition-transform duration-500 hover:scale-105"
       />
 
       <!-- Status Badge - TOP RIGHT -->
@@ -83,6 +95,20 @@ const formattedDistance = computed(() => {
             </svg>
             <span class="text-xs font-bold text-gray-900 ml-1">{{ Number(negocio.promedio || 0).toFixed(1) }}</span>
         </div>
+      </div>
+
+      <!-- Payment and Price Range -->
+      <div class="mt-2 flex items-center justify-between text-xs text-gray-500">
+        <div v-if="negocio.metodosPago && negocio.metodosPago.length" class="flex items-center gap-0.5 text-gray-600">
+          <svg v-if="negocio.metodosPago.includes('efectivo') || negocio.metodosPago.includes('Efectivo')" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+          <svg v-if="negocio.metodosPago.includes('tarjeta') || negocio.metodosPago.includes('Tarjeta')" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+          <svg v-if="negocio.metodosPago.includes('transferencia') || negocio.metodosPago.includes('Transferencia')" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" /></svg>
+        </div>
+        <div v-else></div>
+        
+        <span v-if="negocio.rangoPrecio?.min || negocio.rangoPrecio?.max" class="truncate font-medium text-gray-600">
+          ${{ negocio.rangoPrecio.min || 0 }} - ${{ negocio.rangoPrecio.max || 0 }}
+        </span>
       </div>
     </div>
   </div>

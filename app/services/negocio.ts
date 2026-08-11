@@ -153,3 +153,22 @@ export async function registrarVisita(negocioId: string): Promise<{ ok: boolean 
     return { ok: false };
   }
 }
+
+/**
+ * Obtiene un negocio por su ID.
+ * Endpoint: GET /negocios/:id
+ */
+export async function obtenerNegocioPorId(id: string): Promise<Negocio> {
+  const config = useRuntimeConfig();
+  const API_BASE = config.public.apiBase;
+  
+  const url = `${API_BASE}/negocios/${id}`;
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error('Error al cargar el negocio');
+  }
+
+  const data = await res.json();
+  return data.negocio || data.data || data;
+}

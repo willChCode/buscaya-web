@@ -49,3 +49,73 @@
     font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   }
 }
+
+/* Animaciones de entrada para la home (navbar, hero, categorías, negocios, promos) */
+@layer utilities {
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out both;
+  }
+  .animate-fade-in-down {
+    animation: fadeInDown 0.5s ease-out both;
+  }
+  .animate-fade-in {
+    animation: fadeIn 0.7s ease-out both;
+  }
+  .animate-float-slow {
+    animation: floatSlow 7s ease-in-out infinite;
+  }
+  .animate-float-slower {
+    animation: floatSlow 10s ease-in-out infinite;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes floatSlow {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(4px, -6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-fade-in-down,
+  .animate-fade-in,
+  .animate-float-slow,
+  .animate-float-slower {
+    animation: none !important;
+  }
+}

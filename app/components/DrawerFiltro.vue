@@ -3,7 +3,7 @@
     <transition name="fade">
       <div
         v-if="isOpen"
-        class="fixed inset-0 z-50 flex justify-end"
+        class="fixed inset-0 z-[70] flex justify-end"
         role="dialog"
         aria-modal="true"
       >
@@ -273,23 +273,12 @@ watch(
   }
 );
 
-const categorias = [
-  { id: 1, nombre: 'Servicios Profesionales' },
-  { id: 2, nombre: 'Comida y Bebida' },
-  { id: 3, nombre: 'Hogar y Construcción' },
-  { id: 4, nombre: 'Tiendas Locales' },
-  { id: 5, nombre: 'Salud y Médicos' },
-  { id: 6, nombre: 'Belleza y Estética' },
-  { id: 7, nombre: 'Fiestas y Eventos' },
-  { id: 8, nombre: 'Automotriz' },
-  { id: 9, nombre: 'Mascotas' },
-  { id: 10, nombre: 'Ropa y Accesorios' },
-  { id: 11, nombre: 'Papelerías y Oficinas' },
-  { id: 12, nombre: 'Alojamiento y Transporte' },
-  { id: 13, nombre: 'Bancos y Finanzas' },
-  { id: 14, nombre: 'Deporte y Gimnasios' },
-  { id: 15, nombre: 'Muebles y Decoración' },
-];
+import { GRUPOS_CATEGORIAS_UNIFICADOS } from '~/utils/categories';
+
+const categorias = GRUPOS_CATEGORIAS_UNIFICADOS.map((grupo, index) => ({
+  id: index + 1,
+  nombre: grupo.nombre,
+}));
 
 const toggleCategoria = (nombre: string) => {
   if (filtros.value.giro === nombre) {

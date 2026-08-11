@@ -9,6 +9,14 @@ export const normalizarTexto = (s: string) =>
     .toLowerCase();
 
 /**
+ * Crea un slug URL-friendly a partir de un string
+ */
+export const crearSlug = (s: string) =>
+  normalizarTexto(s)
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
+
+/**
  * Busca un valor dentro de address_components de Google Maps
  */
 export function extraerValor(

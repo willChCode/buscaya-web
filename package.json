@@ -23,6 +23,7 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
+    "@nuxt/icon": "^2.5.0",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@types/google.maps": "^3.58.1",
     "@types/node": "^25.3.0",

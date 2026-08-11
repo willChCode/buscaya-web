@@ -150,7 +150,7 @@
                 v-model="name"
                 type="text"
                 placeholder="Nombre Completo"
-                class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all"
+                class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 outline-none focus:outline-none focus:ring-0 focus:border-primary-500 transition-colors"
                 required
               />
             </div>
@@ -179,7 +179,7 @@
                 v-model="email"
                 type="email"
                 placeholder="Correo electrónico"
-                class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all"
+                class="w-full pl-11 pr-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 outline-none focus:outline-none focus:ring-0 focus:border-primary-500 transition-colors"
                 required
               />
             </div>
@@ -208,7 +208,7 @@
                 v-model="password"
                 :type="showPassword ? 'text' : 'password'"
                 placeholder="Contraseña"
-                class="w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all"
+                class="w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 outline-none focus:outline-none focus:ring-0 focus:border-primary-500 transition-colors"
                 required
               />
               <button
@@ -279,7 +279,7 @@
                 v-model="confirmPassword"
                 :type="showPassword ? 'text' : 'password'"
                 placeholder="Confirmar Contraseña"
-                class="w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-500 transition-all"
+                class="w-full pl-11 pr-12 py-3.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 outline-none focus:outline-none focus:ring-0 focus:border-primary-500 transition-colors"
                 required
               />
             </div>

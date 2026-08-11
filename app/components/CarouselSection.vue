@@ -9,6 +9,7 @@
         <NuxtLink
           v-if="linkTo"
           :to="linkTo"
+          @click="$emit('link-click')"
           class="text-sm font-semibold text-green-600 hover:text-green-700"
         >
           {{ linkText }}
@@ -59,7 +60,7 @@
 
     <div
       ref="sliderRef"
-      class="flex overflow-x-scroll scroll-smooth no-scrollbar"
+      class="flex overflow-x-scroll scroll-smooth no-scrollbar py-6 -my-6"
       :class="gapClass"
     >
       <slot />
@@ -92,6 +93,8 @@ defineProps({
     default: 'gap-3',
   },
 });
+
+defineEmits(['link-click']);
 
 const sliderRef = ref<HTMLElement | null>(null);
 

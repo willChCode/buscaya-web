@@ -56,7 +56,7 @@ const sendMessage = async () => {
       .map((n) => ({
         nombre: n.nombre,
         categoria: n.grupo,
-        descripcion: n.descripcionCorta,
+        descripcion: n.descripcion,
         distancia: Math.round(n.distancia) + 'm',
         tags: n.tag,
         contacto: n.contacto, // Phone, whatsapp, etc.

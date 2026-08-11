@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mt-auto mb-4 shrink-0 mx-4 md:mx-0"
+    class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mt-auto mb-6 shrink-0 mx-4 md:mx-0"
   >
     <h3
       class="font-bold text-gray-800 mb-4 text-sm flex items-center gap-2 uppercase tracking-wide"

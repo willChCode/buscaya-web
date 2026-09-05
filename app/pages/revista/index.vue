@@ -53,6 +53,14 @@ onMounted(() => {
 definePageMeta({
   paddingClass: 'px-0',
 });
+
+useSeoMeta({
+  title: 'Revista Comercial: Promociones y Ofertas de Negocios Locales | BuscaYa',
+  description: 'Descubre las mejores promociones, descuentos y ofertas de negocios locales en nuestra revista digital. Ahorra en servicios y productos cerca de ti.',
+  ogImage: 'https://buscaya.mx/seo-buscaya.jpg',
+  twitterImage: 'https://buscaya.mx/seo-buscaya.jpg',
+  twitterCard: 'summary_large_image'
+});
 </script>
 
 <template>

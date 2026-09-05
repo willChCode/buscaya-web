@@ -507,6 +507,14 @@ const handleLoadMore = async () => {
 definePageMeta({
   paddingClass: 'px-0',
 });
+
+useSeoMeta({
+  title: 'Comunidad BuscaYa: Opiniones y Recomendaciones de Negocios',
+  description: 'Únete a la comunidad de BuscaYa. Lee opiniones reales, comparte recomendaciones y descubre los negocios locales mejor valorados por otros usuarios.',
+  ogImage: 'https://buscaya.mx/seo-buscaya.jpg',
+  twitterImage: 'https://buscaya.mx/seo-buscaya.jpg',
+  twitterCard: 'summary_large_image'
+});
 </script>
 
 <style scoped>

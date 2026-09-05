@@ -31,7 +31,7 @@
       <!-- Search Bar is next -->
 
       <!-- Logo Mobile (Left) -->
-      <NuxtLink to="/" class="-ml-2 flex items-center pl-1">
+      <NuxtLink to="/" class="flex items-center gap-2 group mr-4 md:mr-8">
         <img
           src="~/assets/images/logo/logo-navegador.png"
           alt="Buscaya"
@@ -205,10 +205,10 @@
 
       <nav class="flex flex-col space-y-4">
         <NuxtLink
-          to="/resultados"
+          to="/negocios"
           @click="showMenu = false"
           class="text-lg font-medium text-gray-700 hover:text-primary-500 transition-colors"
-          :class="{ 'text-primary-500': route.path.startsWith('/resultados') }"
+          :class="{ 'text-primary-500': route.path.startsWith('/negocios') }"
         >
           Negocios
         </NuxtLink>
@@ -286,7 +286,7 @@
     class="sticky top-0 z-40 hidden md:flex items-center justify-between h-16 px-6 border-b border-gray-100 bg-white shadow-sm animate-fade-in-down"
   >
     <div class="flex items-center space-x-4 shrink-0">
-      <NuxtLink to="/negocios">
+      <NuxtLink to="/">
         <img
           src="~/assets/images/logo/logo-color.svg"
           alt="Logo de la aplicación"
@@ -370,9 +370,9 @@
       <!-- <div class="h-6 border-r border-gray-200"></div> -->
       <nav class="hidden md:flex items-center space-x-5 text-sm">
         <NuxtLink
-          to="/resultados"
+          to="/negocios"
           :class="[
-            route.path.startsWith('/resultados')
+            route.path.startsWith('/negocios')
               ? 'text-primary-500 font-semibold'
               : 'text-gray-700',
             'hover:text-primary-500 transition duration-150 font-medium',
@@ -553,11 +553,9 @@
             <div
               class="text-gray-900 group-hover:text-primary-500 transition-colors"
             >
-              <img
-                class="h-6 w-6"
-                src="http://solutiai.com/wp-content/uploads/2025/11/location-arrow-svgrepo-com.svg"
-                alt=""
-              />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
             </div>
             <span
               class="text-black font-semibold text-md group-hover:text-primary-500 transition-colors"
@@ -636,7 +634,6 @@
   </Dialog>
 
   <LoginModal v-model:isOpen="showLoginModal" />
-  <ChatWidget />
 </template>
 
 <script setup>
@@ -655,7 +652,7 @@ const route = useRoute();
 // Variables Principales
 const searchQuery = ref('');
 const showMenu = ref(false);
-const showLocationModal = ref(false);
+const showLocationModal = useState('showLocationModal', () => false);
 const showLoginModal = ref(false);
 const step = ref(1); // 1 = Buscador, 2 = Mapa
 const truncateName = (name, maxLength = 10) => {
@@ -675,8 +672,10 @@ watch(
   (newVal) => {
     if (newVal) {
       searchQuery.value = newVal;
-    } else if (route.path !== '/resultados') {
-      searchQuery.value = '';
+    } else if (route.path !== '/negocios') {
+      router.push({
+        path: '/negocios',
+      });
     }
   }
 );
@@ -720,7 +719,7 @@ const handleSearch = () => {
     });
 
     router.push({
-      path: '/resultados',
+      path: '/negocios',
       query: { search: searchQuery.value.trim() },
     });
   }
@@ -728,14 +727,13 @@ const handleSearch = () => {
 
 const handleClearSearch = () => {
   searchQuery.value = '';
-  store.setFiltros({ search: '' });
-  
-  if (route.path.startsWith('/resultados')) {
-    const newQuery = { ...route.query };
-    delete newQuery.search;
+  // Clear search and ensure we are on the results page
+  if (route.path.startsWith('/negocios')) {
+    // Already on search page, just reload without query
+    router.replace({ path: '/negocios' });
+  } else {
     router.push({
-      path: '/resultados',
-      query: newQuery,
+      path: '/negocios',
     });
   }
 };
@@ -885,9 +883,9 @@ const confirmarDireccion = async () => {
 
   showLocationModal.value = false;
 
-  // Opcional: Redirigir si no estamos en negocios
-  if (route.path !== '/negocios') {
-    router.push('/negocios');
+    // Optional: Auto redirect to home/search after login
+  if (route.path !== '/') {
+    router.push('/');
   }
 };
 

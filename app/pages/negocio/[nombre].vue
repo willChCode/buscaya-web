@@ -36,9 +36,9 @@
           class="flex flex-col gap-0 lg:h-full lg:overflow-y-auto no-scrollbar pb-6 lg:pb-[70px]"
         >
           <NegocioHeader :negocio="negocio" />
-          <NegocioContact :negocio="negocio" @rate="handleRate" />
           <NegocioLocation :negocio="negocio" />
           <NegocioHours :negocio="negocio" />
+          <NegocioContact :negocio="negocio" @rate="handleRate" />
         </div>
 
         <!-- Columna Central: Menú -->
@@ -59,6 +59,9 @@
           />
         </div>
       </div>
+      
+      <!-- Espaciador global para que la barra flotante no tape contenido en móvil -->
+      <div class="h-32 md:hidden"></div>
     </div>
 
     <!-- Modals -->

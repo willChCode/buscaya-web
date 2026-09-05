@@ -55,23 +55,23 @@ const scrollTo = (index: number) => {
   <div class="flex flex-col gap-0 mb-5">
     <!-- Image Header -->
     <div
-      class="relative w-full h-52 lg:h-[280px] rounded-2xl overflow-hidden group shrink-0 mb-1.5"
+      class="relative w-full h-auto lg:h-[280px] rounded-2xl overflow-hidden group shrink-0 mb-1.5"
     >
       <!-- Gallery Container -->
       <div
         ref="scrollContainer"
         @scroll="handleScroll"
-        class="flex overflow-x-auto snap-x snap-mandatory w-full h-full scrollbar-hide"
+        class="flex overflow-x-auto snap-x snap-mandatory w-full h-auto lg:h-full scrollbar-hide"
         style="scrollbar-width: none; -ms-overflow-style: none"
       >
         <div
           v-for="(img, idx) in galleryImages"
           :key="idx"
-          class="w-full h-full shrink-0 snap-center relative"
+          class="w-full h-auto lg:h-full shrink-0 snap-center relative"
         >
           <img
             :src="img.url || 'https://placehold.co/600x400?text=Sin+Imagen'"
-            class="w-full h-full object-cover"
+            class="w-full h-auto lg:h-full object-cover"
             alt="Imagen del negocio"
           />
         </div>
@@ -115,7 +115,7 @@ const scrollTo = (index: number) => {
     <!-- Thumbnails Gallery -->
     <div
       v-if="galleryImages.length > 1"
-      class="flex gap-2 overflow-x-auto mb-3 px-4 md:px-0 scrollbar-hide py-1"
+      class="flex gap-2 overflow-x-auto mb-1.5 scrollbar-hide py-1"
     >
       <button
         v-for="(img, idx) in galleryImages"
@@ -141,7 +141,7 @@ const scrollTo = (index: number) => {
     </div>
 
     <!-- External Info -->
-    <div class="shrink-0 mb-3 px-4 md:px-0 flex flex-col gap-3">
+    <div class="shrink-0 mb-3 flex flex-col gap-3 mt-4">
       <!-- Title -->
       <h2
         class="text-xl md:text-2xl font-bold leading-tight tracking-tight text-gray-800"
@@ -285,7 +285,7 @@ const scrollTo = (index: number) => {
 
       <div v-if="negocio.descripcion" class="mt-2">
         <h3
-          class="font-bold text-gray-800 mb-4 text-sm flex items-center gap-2 uppercase tracking-wide"
+          class="font-bold text-gray-800 mb-4 text-lg md:text-sm md:uppercase md:tracking-wide flex items-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

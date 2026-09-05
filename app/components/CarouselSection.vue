@@ -1,10 +1,10 @@
 <template>
   <div class="pb-2 bg-white">
     <div class="flex items-center justify-between mb-4">
-      <h1 class="font-bold text-gray-800 text-lg md:text-xl">
+      <h2 class="font-bold text-gray-800 text-lg md:text-xl">
         {{ title }}
         <span v-if="count">({{ count }})</span>
-      </h1>
+      </h2>
       <div class="flex items-center space-x-4">
         <NuxtLink
           v-if="linkTo"

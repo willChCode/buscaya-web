@@ -1,254 +1,232 @@
 <template>
-  <div class="pt-5 px-3 md:px-6">
-    <!-- BODY -->
-    <!-- HERO BANNER + CATEGORIAS (superpuestas) -->
-    <div class="relative">
-      <HeroBanner />
-
-      <div class="relative z-10 -mt-20 md:-mt-28 mx-4 md:mx-10">
-        <div
-          class="bg-white rounded-2xl shadow-lg shadow-black/5 border border-gray-100 px-6 pt-5 pb-5 md:px-8 md:pt-6 md:pb-6"
-        >
-          <CarouselSection
-            title="Explora por categorías"
-            linkTo="/resultados"
-            linkText="Ver todas"
-            gapClass="gap-4 md:gap-6"
-          >
-            <CardGrupo v-for="grupo in grupos" :key="grupo.id" :grupo="grupo" />
-          </CarouselSection>
-        </div>
-      </div>
-    </div>
-
-    <!-- NEGOCIOS CERCA -->
-    <div class="mt-6 md:mt-4">
-      <CarouselSection
-        title="Negocios cerca de ti"
-        :count="store.totalNegociosHome"
-        linkTo="/resultados"
-        linkText="Ver todos"
-        @link-click="handleClearFilters"
-      >
-        <template v-if="store.cargando">
-          <BusinessSkeleton
-            v-for="n in 5"
-            :key="n"
-            class="w-[285px] flex-shrink-0"
-          />
-        </template>
-        <div
-          v-else-if="store.negociosHome.length === 0"
-          class="w-full text-center py-8"
-        >
-          <div
-            class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 mb-3"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-              />
-            </svg>
-          </div>
-          <p class="text-gray-500 font-medium text-sm">
-            No hay negocios en esta zona.
-          </p>
-          <p class="text-xs text-gray-400 mt-1">
-            Intenta cambiar tu ubicación.
-          </p>
-        </div>
-        <template v-else>
-          <component
-            :is="getCardComponent(negocio)"
-            v-for="(negocio, idx) in store.negociosHome.slice(0, 10)"
-            :key="negocio.id"
-            :negocio="negocio"
-            class="animate-fade-in-up"
-            :style="{ animationDelay: `${idx * 60}ms` }"
-            @click="openBusiness(negocio)"
-          />
-        </template>
-      </CarouselSection>
-    </div>
-
-    <!-- PROMOCIONES -->
-    <div class="mt-6 mb-12">
-      <CarouselSection
-        title="Nuestras promociones"
-        linkTo="/revista"
-        linkText="Ver revista"
-      >
-        <CardPromo
-          v-for="(promo, idx) in promos"
-          :key="promo.id"
-          :promocion="promo"
-          class="animate-fade-in-up"
-          :style="{ animationDelay: `${idx * 70}ms` }"
-        />
-      </CarouselSection>
-    </div>
-  </div>
-
-  <!-- FOOTER NEGOCIOS (Full Width) -->
   <div
-    class="w-full bg-primary-950 text-white py-12 border-t border-primary-900/50"
+    class="px-4 md:px-6 flex justify-between py-5 bg-gray-100 transition-all duration-300 w-full overflow-hidden shrink-0"
   >
-    <div class="container mx-auto px-4 md:px-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 items-center">
-        <!-- Columna 1: Logo / Info -->
+    <div class="flex justify-between w-full">
+      <span class="flex gap-2 justify-center items-center">
+        <h1 class="text-xl font-bold">{{ pageTitle }}</h1>
+        <p class="text-lg text-gray-700 mt-[1px] hidden md:block">
+          ({{ store.totalNegocios }} Resultados)
+        </p>
+      </span>
+
+      <div class="flex items-center gap-3 shrink-0">
+        <!-- Active Filter Tags -->
         <div
-          class="col-span-1 flex flex-col items-center md:items-start text-center md:text-left"
+          v-if="activeFilters.length > 0"
+          class="hidden sm:flex items-center gap-2 overflow-x-auto no-scrollbar py-1"
         >
           <div
-            class="flex items-center justify-center md:justify-start gap-3 mb-5"
+            v-for="filter in activeFilters"
+            :key="filter.id"
+            class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 whitespace-nowrap"
           >
-            <img
-              src="~/assets/images/logo/buscaya-logo-blanco.png"
-              alt="Buscaya"
-              class="h-8 w-auto opacity-100"
-            />
-            <!-- <span class="text-2xl font-bold text-white tracking-tight">Buscaya Negocios</span> -->
-          </div>
-          <p
-            class="text-gray-300 text-[13.5px] leading-relaxed mb-6 max-w-sm font-light mx-auto md:mx-0"
-          >
-            La plataforma líder para conectar negocios locales con clientes en
-            tiempo real. Descubre, conecta y crece con nosotros.
-          </p>
-          <div class="flex space-x-4 justify-center md:justify-start">
-            <!-- Facebook -->
-            <a
-              href="https://www.facebook.com/buscaya.nl/"
-              target="_blank"
-              class="text-gray-100 hover:text-white transition-colors"
+            <span class="text-xs font-medium text-gray-700">{{
+              filter.label
+            }}</span>
+            <button
+              @click="removeFilter(filter.id)"
+              class="text-gray-400 hover:text-red-500 transition-colors"
             >
               <svg
-                class="h-6 w-6 -mt-[2px]"
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-3.5 w-3.5"
+                viewBox="0 0 20 20"
                 fill="currentColor"
-                viewBox="0 0 24 24"
               >
                 <path
-                  d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
                 />
               </svg>
-            </a>
-            <!-- Instagram -->
-            <a
-              href="https://www.instagram.com/buscaya.mx"
-              target="_blank"
-              class="text-gray-100 hover:text-white transition-colors"
-            >
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
-                />
-              </svg>
-            </a>
-            <!-- WhatsApp -->
-            <a
-              href="https://wa.me/528110720923"
-              target="_blank"
-              class="text-gray-100 hover:text-white transition-colors"
-            >
-              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                <path
-                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
-                />
-              </svg>
-            </a>
+            </button>
           </div>
         </div>
 
-        <!-- Columna 2: CTA Negocios (Premium UI) -->
-        <div
-          class="col-span-1 flex flex-col items-center md:items-end text-center md:text-right"
+        <button
+          @click="handleSeeAll"
+          class="text-sm font-semibold text-gray-500 hover:text-primary-500 transition-colors whitespace-nowrap"
         >
-          <h4
-            class="text-xl md:text-[25px] font-extrabold leading-tight text-white mb-4"
+          Ver todos
+        </button>
+        <button
+          type="button"
+          @click="isFilterOpen = true"
+          class="group flex items-center gap-2 rounded-full bg-white px-4 py-2 transition-colors hover:bg-gray-200 cursor-pointer shrink-0"
+        >
+          <span class="text-sm font-bold"> Filtros </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="text-slate-900"
           >
-            Lleva tu negocio al
-            <span class="text-[#FFD100]">siguiente nivel</span>
-          </h4>
-          <p
-            class="text-gray-300 text-[13.5px] mb-8 max-w-lg leading-relaxed font-light mx-auto md:mr-0"
-          >
-            Únete a la plataforma de mayor crecimiento. Destaca con un perfil
-            profesional y llega directo a los clientes que buscan lo que
-            ofreces.
-          </p>
-          <a
-            href="https://wa.me/528110720923?text=hola%2C%20vengo%20de%20su%20pagina%20web%20me%20gustaria%20registrar%20mi%20engocio%20en%20buscaYa"
-            target="_blank"
-            class="bg-[#FFD100] hover:bg-[#ffdb4d] text-gray-900 font-bold py-3 px-10 rounded-2xl transition-all duration-300 shadow-[0_10px_20px_-5px_rgba(255,209,0,0.3)] hover:shadow-[0_15px_30px_-5px_rgba(255,209,0,0.4)] hover:-translate-y-1 active:scale-95 flex items-center gap-3 group"
-          >
-            <span class="text-base font-bold">Contáctanos</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </a>
-        </div>
-      </div>
-
-      <div
-        class="border-t border-primary-900/50 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-300"
-      >
-        <p>
-          &copy; {{ new Date().getFullYear() }} Buscaya Inc. Todos los derechos
-          reservados.
-        </p>
-        <div class="flex space-x-4 mt-4 md:mt-0">
-          <NuxtLink to="/soporte" class="hover:text-white"
-            >Soporte y Ayuda</NuxtLink
-          >
-        </div>
+            <line x1="4" y1="6" x2="20" y2="6" />
+            <circle
+              cx="8"
+              cy="6"
+              r="2"
+              class="fill-[#EBECEF] stroke-slate-900 transition-colors group-hover:fill-[#d1d5db]"
+            />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <circle
+              cx="16"
+              cy="12"
+              r="2"
+              class="fill-[#EBECEF] stroke-slate-900 transition-colors group-hover:fill-[#d1d5db]"
+            />
+            <line x1="4" y1="18" x2="20" y2="18" />
+            <circle
+              cx="8"
+              cy="18"
+              r="2"
+              class="fill-[#EBECEF] stroke-slate-900 transition-colors group-hover:fill-[#d1d5db]"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- DATOS BASE NEGOCIOS Y GEOLOCALIZACION -->
-  <!-- <div>
-    <p>{{ store.ubicacion?.direccion }}</p>
-  </div> -->
+  <!-- Mobile Active Filters (Scrollable) -->
+  <div
+    v-if="activeFilters.length > 0"
+    class="flex sm:hidden overflow-x-auto no-scrollbar gap-2 px-4 pb-4 bg-gray-100"
+  >
+    <div
+      v-for="filter in activeFilters"
+      :key="filter.id"
+      class="flex items-center gap-1 bg-white px-3 py-1.5 rounded-full border border-gray-200 whitespace-nowrap"
+    >
+      <span class="text-xs font-medium text-gray-700">{{ filter.label }}</span>
+      <button
+        @click="removeFilter(filter.id)"
+        class="text-gray-400 hover:text-red-500 transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-3.5 w-3.5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
 
+  <!-- Subcategories Horizontal List -->
+  <div v-if="currentSubcategories.length > 0" class="w-full bg-white border-b border-gray-100 overflow-x-auto no-scrollbar shadow-sm">
+    <div class="flex items-start gap-4 px-4 md:px-6 py-4 min-w-max">
+      <!-- "Todos" button -->
+      <button 
+        @click="selectSubcategory('')"
+        class="flex flex-col items-center justify-start gap-1 w-[70px] transition-all group"
+      >
+        <div 
+          class="w-14 h-14 rounded-full flex items-center justify-center transition-all"
+          :class="!store.filtros.categoria ? 'bg-primary-500 shadow-md scale-105' : 'bg-gray-50 border border-gray-100 group-hover:bg-gray-100'"
+        >
+          <Icon name="ion:grid" class="w-6 h-6" :class="!store.filtros.categoria ? 'text-white' : 'text-gray-400'" />
+        </div>
+        <span class="text-[11px] mt-1 text-center leading-tight" :class="!store.filtros.categoria ? 'text-primary-600 font-bold' : 'text-gray-500 font-medium'">Todos</span>
+      </button>
+
+      <!-- Subcategory buttons -->
+      <button 
+        v-for="sub in currentSubcategories" 
+        :key="sub.nombre"
+        @click="selectSubcategory(sub.nombre)"
+        class="flex flex-col items-center justify-start gap-1 w-[70px] transition-all group"
+      >
+        <div 
+          class="w-14 h-14 rounded-full flex items-center justify-center transition-all"
+          :class="store.filtros.categoria === sub.nombre ? 'bg-primary-500 shadow-md scale-105' : 'bg-gray-50 border border-gray-100 group-hover:bg-gray-100'"
+        >
+          <Icon :name="'ion:' + sub.icono" class="w-6 h-6" :class="store.filtros.categoria === sub.nombre ? 'text-white' : 'text-gray-400'" />
+        </div>
+        <span class="text-[11px] mt-1 text-center leading-tight" :class="store.filtros.categoria === sub.nombre ? 'text-primary-600 font-bold' : 'text-gray-500 font-medium'">{{ sub.nombre }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="py-4 w-full max-w-full overflow-hidden">
+    <!-- Loading State for new searches/filters -->
+    <div
+      v-if="store.cargando && store.page === 1"
+      class="grid gap-2 md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-3 md:px-6"
+    >
+      <BusinessSkeleton v-for="n in 8" :key="n" class="w-full mx-auto" />
+    </div>
+
+    <!-- Empty State (Only if not loading) -->
+    <div
+      v-else-if="!store.cargando && store.negociosFitlrados?.length === 0"
+      class="text-center py-10 px-4 md:px-6"
+    >
+      <p>No se encontraron resultados para tu búsqueda.</p>
+    </div>
+
+    <!-- Results (Only if not loading a new page 1) -->
+    <div
+      v-else
+      class="grid gap-[6px] md:gap-4 grid-cols-2 md:grid-cols-[repeat(auto-fill,minmax(240px,1fr))] px-[9px] md:px-6"
+    >
+      <component
+        :is="getCardComponent(negocio)"
+        v-for="negocio in store.negociosFitlrados"
+        :key="negocio._id"
+        :negocio="negocio"
+        fullWidth
+        :compactMode="true"
+        class="w-full mx-auto"
+        @click="openBusiness(negocio)"
+      />
+    </div>
+
+    <!-- Cargar más button -->
+    <div v-if="store.hasMore" class="w-full flex justify-center py-6 mt-4">
+      <button 
+        @click="store.cargarMas()" 
+        class="px-6 py-2.5 bg-primary-500 text-white font-bold rounded-full shadow-md hover:bg-primary-600 active:scale-95 transition-all text-sm flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        :disabled="store.cargando"
+      >
+        <svg v-if="store.cargando" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        {{ store.cargando ? 'Cargando...' : 'Cargar más resultados' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Drawer Reutilizable -->
   <DrawerNegocio v-model:isOpen="isOpen" :negocio="selectedNegocio" />
+  <DrawerFiltro v-model:isOpen="isFilterOpen" @apply="handleApplyFilters" />
 </template>
 
-<script setup>
-import { useUbicacionNegocios } from '~/store/ubicacion.store';
+<script setup lang="ts">
+import { useUbicacionNegocios } from '@/store/ubicacion.store';
+import { computed, onMounted, watch, ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import Card from '~/components/Card.vue';
 import CardPremium from '~/components/CardPremium.vue';
-import CardGrupo from '~/components/CardGrupo.vue';
-import CardPromo from '~/components/CardPromo.vue';
-import CarouselSection from '~/components/CarouselSection.vue';
 import DrawerNegocio from '~/components/DrawerNegocio.vue';
+import DrawerFiltro from '~/components/DrawerFiltro.vue';
 import BusinessSkeleton from '~/components/BusinessSkeleton.vue';
-import HeroBanner from '~/components/home/HeroBanner.vue';
-import { crearSlug } from '~/utils/helpers';
 
-// Remove default layout padding to allow full-width footer
-definePageMeta({
-  paddingClass: 'p-0',
-});
-
-const getCardComponent = (negocio) => {
+const getCardComponent = (negocio: any) => {
   const plan = negocio.membresia?.plan?.toLowerCase();
   if (plan === 'premium' || plan === 'gold') {
     return CardPremium;
@@ -256,79 +234,212 @@ const getCardComponent = (negocio) => {
   return Card;
 };
 
-const selectedNegocio = ref(null);
-const isOpen = ref(false);
+const route = useRoute();
 const router = useRouter();
 const store = useUbicacionNegocios();
+const selectedNegocio = ref<any>(null);
 
-const openBusiness = (negocio) => {
+definePageMeta({
+  paddingClass: 'px-0',
+});
+
+useSeoMeta({
+  title: 'Directorio de Negocios y Empresas Locales en México | BuscaYa',
+  description: 'Explora nuestro directorio de negocios y encuentra empresas, servicios profesionales, restaurantes y tiendas locales cerca de ti. ¡Descubre las mejores opciones en BuscaYa!',
+  ogImage: 'https://buscaya.mx/seo-buscaya.jpg',
+  twitterImage: 'https://buscaya.mx/seo-buscaya.jpg',
+  twitterCard: 'summary_large_image'
+});
+
+const isOpen = ref(false);
+const isFilterOpen = ref(false);
+
+// Función que llama el @click de la Card
+import { crearSlug } from '~/utils/helpers';
+
+const openBusiness = (negocio: any) => {
   const slug = crearSlug(negocio.nombre);
   const id = negocio._id || negocio.id;
-  router.push({ path: `/${slug}`, query: { id } });
+  router.push({ path: `/negocio/${slug}`, query: { id } });
 };
 
-const handleClearFilters = () => {
-  // Limpiamos la categoría para que al ir a resultados muestre "Todos"
-  store.setFiltros({ giro: '', categoria: '', search: '' });
+// --- Helper: Normalización de Texto ---
+const limpiarTexto = (texto: any) => {
+  if (!texto) return '';
+  const str = typeof texto === 'object' ? JSON.stringify(texto) : String(texto);
+
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase();
+};
+
+// --- Params de URL ---
+const queryParam = computed(() => limpiarTexto(route.query.search));
+const catParam = computed(() =>
+  //@ts-ignore
+  limpiarTexto(route.query.category?.replace(/-/g, ' '))
+);
+
+// --- Título Dinámico ---
+const pageTitle = computed(() => {
+  // Si hay una subcategoría seleccionada, la mostramos
+  if (store.filtros.categoria) return store.filtros.categoria;
+
+  // Si hay un giro (categoría principal), lo mostramos
+  if (store.filtros.giro) return store.filtros.giro;
+
+  // Si hay búsqueda en URL
+  const rawQuery = route.query.search as string;
+  if (rawQuery) {
+    return rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1);
+  }
+
+  // Si hay categoría en URL (legacy)
+  const rawCat = route.query.category as string;
+  if (rawCat) {
+    const texto = rawCat.replace(/-/g, ' ');
+    return texto.charAt(0).toUpperCase() + texto.slice(1);
+  }
+
+  return 'Resultados';
+});
+
+// --- Filtros Activos ---
+const activeFilters = computed(() => {
+  const filters: { id: string; label: string }[] = [];
+
+  if (store.filtros.giro) {
+    filters.push({ id: 'giro', label: store.filtros.giro });
+  }
+
+  if (store.filtros.categoria) {
+    filters.push({ id: 'categoria', label: store.filtros.categoria });
+  }
+
+  if (store.filtros.abierto === 'abierto') {
+    filters.push({ id: 'abierto', label: 'Abierto ahora' });
+  }
+
+  return filters;
+});
+
+// --- Manejo de Filtros y Subcategorías ---
+import { GRUPOS_CATEGORIAS_UNIFICADOS } from '~/utils/categories';
+
+const currentSubcategories = computed(() => {
+  if (!store.filtros.giro) return [];
+  const grupo = GRUPOS_CATEGORIAS_UNIFICADOS.find(g => g.nombre === store.filtros.giro);
+  return grupo ? grupo.subcategorias : [];
+});
+
+const selectSubcategory = (subcat: string) => {
+  store.filtros.categoria = store.filtros.categoria === subcat ? '' : subcat;
+  store.page = 1;
+  store.actualizarDatos(true);
+};
+
+const removeFilter = async (id: string) => {
+  if (id === 'giro') {
+    store.setFiltros({ giro: '', categoria: '' });
+    // Also remove from URL if present
+    if (route.query.category) {
+      const newQuery = { ...route.query };
+      delete newQuery.category;
+      await router.push({ query: newQuery });
+    }
+  } else if (id === 'categoria') {
+    store.setFiltros({ categoria: '' });
+  } else if (id === 'abierto') {
+    store.setFiltros({ abierto: '' });
+  } else if (id === 'rating') {
+    store.setFiltros({ rating: 0 });
+  }
+
+  store.page = 1;
+  await store.actualizarDatos(true);
+};
+
+// --- Helper de Coincidencia ---
+const coincide = (fuente: any, terminoLimpio: string) => {
+  return limpiarTexto(fuente).includes(terminoLimpio);
+};
+
+// --- Lógica Principal ---
+const handleApplyFilters = async () => {
+  await store.actualizarDatos(true);
+  // handleFilter(); // Ya no es necesario filtrar localmente si confiamos en el backend
+};
+
+const handleSeeAll = async () => {
+  // store.resetFiltros(); // Don't reset all filters, user wants to keep radius/etc.
+  await router.push({ query: { ...route.query, search: undefined } });
+  // The route watcher will trigger store update
+};
+
+const handleFilter = async () => {
+  store.lastFilterQuery = JSON.parse(JSON.stringify(route.query));
+
+  const search = (route.query.search as string) || '';
+
+  // Update store filter
+  if (store.filtros.search !== search) {
+    store.setFiltros({ search });
+    // Trigger fetch because search changed
+    await store.actualizarDatos(true);
+  } else {
+    // If search didn't change, but maybe we just navigated here, ensure we have data.
+    // store.actualizarDatos() checks cache.
+    await store.actualizarDatos();
+  }
 };
 
 onMounted(() => {
-  if (!store.ubicacion || !store.ubicacion.direccion) {
-    router.push('/');
-  } else {
-    store.fetchHomeNegocios(); // usa home específico
-  }
+  const search = (route.query.search as string) || '';
+  store.setFiltros({ search });
+  store.actualizarDatos(true); // Force fetch on mount to be sure
 });
 
-const grupos = [
-  {
-    id: 1,
-    nombre: 'Servicios Profesionales',
-    imagen: '/categorias/profesionistas.png',
-  },
-  { id: 2, nombre: 'Salud y Medicina', imagen: '/categorias/Salud.png' },
-  { id: 3, nombre: 'Comida y Bebida', imagen: '/categorias/Comida.png' },
-  { id: 4, nombre: 'Comercio Local', imagen: '/categorias/Tiendas.png' },
-  {
-    id: 5,
-    nombre: 'Mascotas y Veterinaria',
-    imagen: '/categorias/Mascotas.png',
-  },
-  { id: 6, nombre: 'Moda y Estilo', imagen: '/categorias/ropa.png' },
-  {
-    id: 7,
-    nombre: 'Tecnología y Oficina',
-    imagen: '/categorias/papelerias.png',
-  },
-  { id: 8, nombre: 'Viajes y Hospedaje', imagen: '/categorias/Hospedajes.png' },
-  { id: 9, nombre: 'Mundo Automotriz', imagen: '/categorias/Mecanico.png' },
-  { id: 10, nombre: 'Servicios Técnicos', imagen: '/categorias/Hogar.png' },
-  { id: 11, nombre: 'Estética y Belleza', imagen: '/categorias/Belleza.png' },
-  { id: 12, nombre: 'Eventos y Fiestas', imagen: '/categorias/Eventos.png' },
-  { id: 13, nombre: 'Finanzas y Seguros', imagen: '/categorias/bancos.png' },
-  { id: 14, nombre: 'Fitness y Deportes', imagen: '/categorias/deportes.png' },
-  { id: 15, nombre: 'Hogar y Muebles', imagen: '/categorias/muebles.png' },
-];
-const promos = [
-  {
-    id: 1,
-    imagen: '/banner/1.jpg',
-  },
-  {
-    id: 2,
-    imagen: '/banner/2.jpg',
-  },
-  {
-    id: 3,
-    imagen: '/banner/4.jpg',
-  },
-  {
-    id: 4,
-    imagen: '/banner/5.jpg',
-  },
-  {
-    id: 5,
-    imagen: '/banner/3.jpg',
-  },
-];
+watch(
+  () => route.query.search,
+  (newVal) => {
+    const search = (newVal as string) || '';
+    store.setFiltros({ search });
+    store.actualizarDatos(true);
+  }
+);
 </script>
+
+<style scoped>
+/* === SCROLLBAR MINIMALISTA === */
+
+/* 1. Ancho de la barra (Vertical y Horizontal) */
+::-webkit-scrollbar {
+  width: 6px; /* Muy delgada */
+  height: 6px;
+}
+
+/* 2. El riel (Fondo) - Lo hacemos transparente */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 3. La barra (Thumb) - Gris suave y redondeada */
+::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0; /* un gris muy sutil (slate-200) */
+  border-radius: 9999px; /* totalmente redonda */
+  border: 2px solid transparent; /* espacio para que flote */
+  background-clip: content-box;
+}
+
+/* 4. Al pasar el mouse por encima */
+::-webkit-scrollbar-thumb:hover {
+  background-color: #cbd5e1; /* un poco más oscuro (slate-300) */
+}
+
+/* Compatibilidad con Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}
+</style>

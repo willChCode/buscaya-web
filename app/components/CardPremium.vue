@@ -60,25 +60,39 @@ const formattedDistance = computed(() => {
     </div>
 
     <!-- Info Section -->
-    <div class="px-3 py-2">
+    <div class="px-3 py-3">
+      <!-- Top Row: Category and Price -->
+      <div class="flex items-center justify-between mb-1.5">
+        <span class="text-[11px] font-bold text-[#2d7a5d] uppercase tracking-wider truncate pr-2">
+            {{ negocio.categoria || 'Categoría' }}
+        </span>
+        <span v-if="negocio.rangoPrecio?.min || negocio.rangoPrecio?.max" class="text-[12px] font-bold text-slate-500 whitespace-nowrap">
+          ${{ negocio.rangoPrecio.min || 0 }} - ${{ negocio.rangoPrecio.max || 0 }}
+        </span>
+      </div>
+
       <!-- Title -->
-      <h3 class="text-[16px] font-semibold text-gray-900 leading-tight truncate mb-1">
+      <h3 class="text-[17px] font-bold text-[#1a2639] leading-tight truncate mb-2.5">
         {{ negocio.nombre?.charAt(0).toUpperCase() + negocio.nombre?.slice(1) }}
       </h3>
 
-      <!-- Category & Ratings -->
-      <div class="flex items-center justify-between">
-           <!-- Category -->
-        <p class="text-gray-500 text-xs font-medium truncate flex-1 mr-2">
-            {{ negocio.grupo || 'Negocio' }}
-        </p>
-
+      <!-- Bottom Row: Rating and Details -->
+      <div class="flex items-center justify-between mt-auto">
         <!-- Rating -->
-        <div class="flex items-center bg-gray-50 px-1.5 py-0.5 rounded-md">
-             <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.538 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.783.57-1.838-.197-1.538-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
-            </svg>
-            <span class="text-xs font-bold text-gray-900 ml-1">{{ Number(negocio.promedio || 0).toFixed(1) }}</span>
+        <div class="flex items-center gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-orange-400" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.538 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.783.57-1.838-.197-1.538-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
+          </svg>
+          <span class="text-[14px] font-bold text-[#1a2639]">{{ Number(negocio.promedio || 0).toFixed(1) }}</span>
+          <span class="text-[13px] font-medium text-gray-400 ml-0.5">({{ negocio.totalReseñas || 0 }})</span>
+        </div>
+        
+        <!-- Ver detalles -->
+        <div class="flex items-center text-[13px] font-bold text-[#3b4c68] hover:text-green-600 transition-colors">
+          <span>Ver detalles</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
         </div>
       </div>
     </div>

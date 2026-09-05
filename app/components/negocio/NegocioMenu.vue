@@ -9,7 +9,7 @@
       <p class="text-xs text-gray-400">Selecciona para ver detalles</p>
     </div>
 
-    <div class="flex-1 p-4 px-6 md:px-4 pb-[100px]">
+    <div class="flex-1 p-4 px-6 md:px-4 lg:pb-[100px]">
       <div
         v-if="!negocio.productos || negocio.productos.length === 0"
         class="text-center py-10 text-gray-400"
@@ -17,7 +17,7 @@
         Sin productos registrados.
       </div>
 
-      <div v-else class="grid grid-cols-3 gap-x-3 gap-y-5">
+      <div v-else class="grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-5">
         <div
           v-for="(prod, idx) in negocio.productos"
           :key="idx"

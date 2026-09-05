@@ -1,10 +1,10 @@
 <template>
   <NuxtLayout>
     <NuxtPage />
-    <ChatWidget />
+    <WhatsAppWidget />
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import ChatWidget from '~/components/ChatWidget.vue';
+import WhatsAppWidget from '~/components/WhatsAppWidget.vue';
 </script>

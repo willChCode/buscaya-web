@@ -1,9 +1,9 @@
 <template>
   <div
-    class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mt-auto mb-4 mx-4 md:mx-0"
+    class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mt-auto mb-4"
   >
     <h3
-      class="font-bold text-gray-800 mb-4 text-sm flex items-center gap-2 uppercase tracking-wide"
+      class="font-bold text-gray-800 mb-4 text-lg md:text-sm md:uppercase md:tracking-wide flex items-center gap-2"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

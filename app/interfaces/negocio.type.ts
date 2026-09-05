@@ -89,7 +89,7 @@ export interface Negocio {
   portada: { url: string; id: string }
   nombre: string
   grupo: string 
-  // categoria: string
+  categoria: string
   tag: string[]
   colonia: string // El nombre de la colonia
 

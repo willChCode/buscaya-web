@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- Espaciador para que la barra flotante no tape contenido al final -->
-    <div class="h-32 md:hidden"></div>
 
     <!-- Contenedor fijo: Abajo completo en todas las pantallas -->
     <div class="fixed bottom-0 left-0 right-0 z-40 pointer-events-none">
@@ -20,8 +18,10 @@
             </p>
           </div>
 
-          <div class="flex items-center gap-3">
-            <!-- Facebook -->
+          <div class="flex flex-col md:flex-row md:items-center gap-3">
+            <!-- Redes Sociales -->
+            <div class="flex flex-wrap items-center gap-3">
+              <!-- Facebook -->
             <a
               v-if="negocio.contacto?.facebook"
               :href="negocio.contacto.facebook"
@@ -108,10 +108,14 @@
             <!-- Separador visual -->
             <div
               v-if="negocio.contacto?.facebook || negocio.contacto?.instagram || negocio.contacto?.tiktok || negocio.contacto?.pagina_web || negocio.contacto?.web"
-              class="w-px h-8 bg-gray-200 mx-1 md:mx-2 shrink-0"
+              class="hidden md:block w-px h-8 bg-gray-200 mx-1 md:mx-2 shrink-0"
             ></div>
             
-            <!-- Llamar -->
+            </div>
+            
+            <!-- Botones de Acción -->
+            <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+              <!-- Llamar -->
             <a
               :href="`tel:${negocio.contacto?.telefono}`"
               class="shrink-0 h-11 md:h-12 px-3 md:px-5 flex items-center justify-center gap-2 rounded-xl border border-gray-200 text-gray-700 font-bold hover:bg-gray-50 active:scale-95 transition-all shadow-sm cursor-pointer"
@@ -176,6 +180,7 @@
               </svg>
               WhatsApp
             </a>
+          </div>
           </div>
         </div>
       </div>

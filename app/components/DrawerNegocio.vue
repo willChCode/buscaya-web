@@ -16,9 +16,9 @@
             class="lg:col-span-4 flex flex-col gap-0 lg:overflow-y-auto lg:pr-4 lg:h-full"
           >
             <NegocioHeader :negocio="negocio" />
-            <NegocioContact :negocio="negocio" @rate="handleRate" />
             <NegocioLocation :negocio="negocio" />
             <NegocioHours :negocio="negocio" />
+            <NegocioContact :negocio="negocio" @rate="handleRate" />
           </div>
 
           <!-- Columna Central: Menú -->
@@ -27,6 +27,9 @@
           <!-- Columna Derecha: Reseñas -->
           <NegocioReviews :negocio="negocio" @write-review="handleRate" />
         </div>
+        
+        <!-- Espaciador global para que la barra flotante no tape contenido en móvil -->
+        <div class="h-32 md:hidden"></div>
       </div>
     </DrawerCard>
 

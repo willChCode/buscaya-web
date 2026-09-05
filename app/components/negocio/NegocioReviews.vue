@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div class="flex-1 p-4 px-6 md:px-4 pb-[100px]">
+    <div class="flex-1 p-4 px-6 md:px-4 lg:pb-[100px]">
       <div class="mb-5">
         <button
           @click="$emit('write-review')"

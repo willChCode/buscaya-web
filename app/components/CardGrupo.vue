@@ -15,10 +15,6 @@ import { useUbicacionNegocios } from '@/store/ubicacion.store';
 
 const store = useUbicacionNegocios();
 
-/**
- * Función que maneja el clic en la tarjeta de grupo/categoría.
- * Navega a la página de resultados con el filtro aplicado en el store.
- */
 const goToCategoryResults = (nombre) => {
   // Preserve radius to respect user config
   const currentRadius = store.filtros.radius;
@@ -31,7 +27,7 @@ const goToCategoryResults = (nombre) => {
   });
 
   router.push({
-    path: '/resultados',
+    path: '/negocios',
   });
 };
 </script>

@@ -113,7 +113,8 @@ const maxDiscount = computed(() => {
 
       <!-- Title -->
       <h3
-        class="text-[17px] font-bold text-[#1a2639] leading-tight truncate mb-1"
+        class="font-bold text-[#1a2639] leading-tight truncate mb-1"
+        :class="compactMode ? 'text-[15px] md:text-[17px]' : 'text-[17px]'"
       >
         {{ negocio.nombre?.charAt(0).toUpperCase() + negocio.nombre?.slice(1) }}
       </h3>

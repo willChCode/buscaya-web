@@ -131,7 +131,7 @@
     <div class="px-4 py-2 bg-white border-b border-gray-100">
       <div
         @click="showLocationModal = true"
-        class="flex items-center text-sm text-primary-500 cursor-pointer hover:text-primary-700 select-none truncate"
+        class="flex items-center text-xs md:text-sm text-primary-500 cursor-pointer hover:text-primary-700 select-none truncate"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

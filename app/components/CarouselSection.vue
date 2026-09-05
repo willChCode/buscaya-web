@@ -1,11 +1,17 @@
 <template>
   <div class="pb-2 bg-white">
-    <div class="flex items-center justify-between mb-4">
-      <h2 class="font-bold text-gray-800 text-lg md:text-xl">
+    <div class="flex items-center justify-between mb-4 relative">
+      <h2 
+        class="font-bold text-gray-800 text-lg md:text-xl"
+        :class="centerTitleMobile ? 'w-full text-center md:text-left md:w-auto' : ''"
+      >
         {{ title }}
         <span v-if="count">({{ count }})</span>
       </h2>
-      <div class="flex items-center space-x-4">
+      <div 
+        class="flex items-center space-x-4"
+        :class="centerTitleMobile ? 'absolute right-0 md:relative' : ''"
+      >
         <NuxtLink
           v-if="linkTo"
           :to="linkTo"
@@ -91,6 +97,10 @@ defineProps({
   gapClass: {
     type: String,
     default: 'gap-3',
+  },
+  centerTitleMobile: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -72,7 +72,10 @@ const formattedDistance = computed(() => {
       </div>
 
       <!-- Title -->
-      <h3 class="text-[17px] font-bold text-[#1a2639] leading-tight truncate mb-2.5">
+      <h3 
+        class="font-bold text-[#1a2639] leading-tight truncate mb-2.5"
+        :class="compactMode ? 'text-[15px] md:text-[17px]' : 'text-[17px]'"
+      >
         {{ negocio.nombre?.charAt(0).toUpperCase() + negocio.nombre?.slice(1) }}
       </h3>
 

@@ -1,17 +1,18 @@
 <template>
-  <div class="pt-5 px-3 md:px-6">
+  <div class="pt-0 md:pt-5 px-4 md:px-6">
     <!-- BODY -->
     <!-- HERO BANNER + CATEGORIAS (superpuestas) -->
     <div class="relative">
       <HeroBanner />
 
-      <div class="relative z-10 -mt-20 md:-mt-28 mx-4 md:mx-10">
+      <div class="relative z-10 -mt-20 md:-mt-28 mx-0 md:mx-10">
         <div
           class="bg-white rounded-2xl shadow-lg shadow-black/5 border border-gray-100 px-6 pt-5 pb-5 md:px-8 md:pt-6 md:pb-6"
         >
           <CarouselSection
             title="Explora por categorías"
             gapClass="gap-4 md:gap-6"
+            :centerTitleMobile="true"
           >
             <CardGrupo v-for="grupo in grupos" :key="grupo.id" :grupo="grupo" />
           </CarouselSection>

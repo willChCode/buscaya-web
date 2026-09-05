@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-5 px-3 md:px-6 pb-20">
+  <div class="pt-0 md:pt-5 px-4 md:px-6 pb-20">
     <HeroBanner :showSearch="false">
       <template #title>
         <h1 class="text-xl md:text-3xl font-extrabold text-white leading-tight mb-3">

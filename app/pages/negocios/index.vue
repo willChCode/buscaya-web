@@ -4,7 +4,9 @@
   >
     <div class="flex justify-between w-full">
       <span class="flex gap-2 justify-center items-center">
-        <h1 class="text-xl font-bold">{{ pageTitle }}</h1>
+        <h1 class="text-xl font-bold leading-tight md:leading-normal">
+          {{ pageTitle }}
+        </h1>
         <p class="text-lg text-gray-700 mt-[1px] hidden md:block">
           ({{ store.totalNegocios }} Resultados)
         </p>
@@ -46,7 +48,7 @@
 
         <button
           @click="handleSeeAll"
-          class="text-sm font-semibold text-gray-500 hover:text-primary-500 transition-colors whitespace-nowrap"
+          class="text-[13px] md:text-sm font-semibold text-gray-500 hover:text-primary-500 transition-colors whitespace-nowrap"
         >
           Ver todos
         </button>
@@ -55,7 +57,7 @@
           @click="isFilterOpen = true"
           class="group flex items-center gap-2 rounded-full bg-white px-4 py-2 transition-colors hover:bg-gray-200 cursor-pointer shrink-0"
         >
-          <span class="text-sm font-bold"> Filtros </span>
+          <span class="text-[13px] md:text-sm font-bold"> Filtros </span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
@@ -127,36 +129,75 @@
   </div>
 
   <!-- Subcategories Horizontal List -->
-  <div v-if="currentSubcategories.length > 0" class="w-full bg-white border-b border-gray-100 overflow-x-auto no-scrollbar shadow-sm">
+  <div
+    v-if="currentSubcategories.length > 0"
+    class="w-full bg-white border-b border-gray-100 overflow-x-auto no-scrollbar shadow-sm"
+  >
     <div class="flex items-start gap-4 px-4 md:px-6 py-4 min-w-max">
       <!-- "Todos" button -->
-      <button 
+      <button
         @click="selectSubcategory('')"
         class="flex flex-col items-center justify-start gap-1 w-[70px] transition-all group"
       >
-        <div 
+        <div
           class="w-14 h-14 rounded-full flex items-center justify-center transition-all"
-          :class="!store.filtros.categoria ? 'bg-primary-500 shadow-md scale-105' : 'bg-gray-50 border border-gray-100 group-hover:bg-gray-100'"
+          :class="
+            !store.filtros.categoria
+              ? 'bg-primary-500 shadow-md scale-105'
+              : 'bg-gray-50 border border-gray-100 group-hover:bg-gray-100'
+          "
         >
-          <Icon name="ion:grid" class="w-6 h-6" :class="!store.filtros.categoria ? 'text-white' : 'text-gray-400'" />
+          <Icon
+            name="ion:grid"
+            class="w-6 h-6"
+            :class="!store.filtros.categoria ? 'text-white' : 'text-gray-400'"
+          />
         </div>
-        <span class="text-[11px] mt-1 text-center leading-tight" :class="!store.filtros.categoria ? 'text-primary-600 font-bold' : 'text-gray-500 font-medium'">Todos</span>
+        <span
+          class="text-[11px] mt-1 text-center leading-tight"
+          :class="
+            !store.filtros.categoria
+              ? 'text-primary-600 font-bold'
+              : 'text-gray-500 font-medium'
+          "
+          >Todos</span
+        >
       </button>
 
       <!-- Subcategory buttons -->
-      <button 
-        v-for="sub in currentSubcategories" 
+      <button
+        v-for="sub in currentSubcategories"
         :key="sub.nombre"
         @click="selectSubcategory(sub.nombre)"
         class="flex flex-col items-center justify-start gap-1 w-[70px] transition-all group"
       >
-        <div 
+        <div
           class="w-14 h-14 rounded-full flex items-center justify-center transition-all"
-          :class="store.filtros.categoria === sub.nombre ? 'bg-primary-500 shadow-md scale-105' : 'bg-gray-50 border border-gray-100 group-hover:bg-gray-100'"
+          :class="
+            store.filtros.categoria === sub.nombre
+              ? 'bg-primary-500 shadow-md scale-105'
+              : 'bg-gray-50 border border-gray-100 group-hover:bg-gray-100'
+          "
         >
-          <Icon :name="'ion:' + sub.icono" class="w-6 h-6" :class="store.filtros.categoria === sub.nombre ? 'text-white' : 'text-gray-400'" />
+          <Icon
+            :name="'ion:' + sub.icono"
+            class="w-6 h-6"
+            :class="
+              store.filtros.categoria === sub.nombre
+                ? 'text-white'
+                : 'text-gray-400'
+            "
+          />
         </div>
-        <span class="text-[11px] mt-1 text-center leading-tight" :class="store.filtros.categoria === sub.nombre ? 'text-primary-600 font-bold' : 'text-gray-500 font-medium'">{{ sub.nombre }}</span>
+        <span
+          class="text-[11px] mt-1 text-center leading-tight"
+          :class="
+            store.filtros.categoria === sub.nombre
+              ? 'text-primary-600 font-bold'
+              : 'text-gray-500 font-medium'
+          "
+          >{{ sub.nombre }}</span
+        >
       </button>
     </div>
   </div>
@@ -197,14 +238,31 @@
 
     <!-- Cargar más button -->
     <div v-if="store.hasMore" class="w-full flex justify-center py-6 mt-4">
-      <button 
-        @click="store.cargarMas()" 
+      <button
+        @click="store.cargarMas()"
         class="px-6 py-2.5 bg-primary-500 text-white font-bold rounded-full shadow-md hover:bg-primary-600 active:scale-95 transition-all text-sm flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
         :disabled="store.cargando"
       >
-        <svg v-if="store.cargando" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        <svg
+          v-if="store.cargando"
+          class="animate-spin h-4 w-4 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
         </svg>
         {{ store.cargando ? 'Cargando...' : 'Cargar más resultados' }}
       </button>
@@ -245,10 +303,11 @@ definePageMeta({
 
 useSeoMeta({
   title: 'Directorio de Negocios y Empresas Locales en México | BuscaYa',
-  description: 'Explora nuestro directorio de negocios y encuentra empresas, servicios profesionales, restaurantes y tiendas locales cerca de ti. ¡Descubre las mejores opciones en BuscaYa!',
+  description:
+    'Explora nuestro directorio de negocios y encuentra empresas, servicios profesionales, restaurantes y tiendas locales cerca de ti. ¡Descubre las mejores opciones en BuscaYa!',
   ogImage: 'https://buscaya.mx/seo-buscaya.jpg',
   twitterImage: 'https://buscaya.mx/seo-buscaya.jpg',
-  twitterCard: 'summary_large_image'
+  twitterCard: 'summary_large_image',
 });
 
 const isOpen = ref(false);
@@ -329,7 +388,9 @@ import { GRUPOS_CATEGORIAS_UNIFICADOS } from '~/utils/categories';
 
 const currentSubcategories = computed(() => {
   if (!store.filtros.giro) return [];
-  const grupo = GRUPOS_CATEGORIAS_UNIFICADOS.find(g => g.nombre === store.filtros.giro);
+  const grupo = GRUPOS_CATEGORIAS_UNIFICADOS.find(
+    (g) => g.nombre === store.filtros.giro
+  );
   return grupo ? grupo.subcategorias : [];
 });
 

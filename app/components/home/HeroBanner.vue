@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative overflow-hidden rounded-2xl md:rounded-3xl px-6 md:px-10 bg-primary-950"
+    class="relative overflow-hidden rounded-none md:rounded-3xl px-4 md:px-10 bg-primary-950 -mx-4 md:mx-0"
     :class="showSearch ? 'pt-12 pb-32 md:pt-14 md:pb-40' : 'py-8 md:py-12'"
   >
     <img
@@ -14,7 +14,7 @@
     ></div>
 
     <!-- Contenido -->
-    <div class="relative z-10 max-w-xl animate-fade-in-up">
+    <div class="relative z-10 max-w-xl animate-fade-in-up text-center md:text-left mx-auto md:mx-0 flex flex-col items-center md:items-start">
       <slot name="title">
         <h1
           class="text-xl md:text-3xl font-extrabold text-white leading-tight mb-3"
@@ -34,13 +34,13 @@
       <form
         v-if="showSearch"
         @submit.prevent="handleSearch"
-        class="flex items-center bg-white rounded-full shadow-lg overflow-hidden max-w-md"
+        class="flex items-center bg-white rounded-full shadow-lg overflow-hidden w-full max-w-md"
       >
         <input
           v-model="query"
           type="text"
           placeholder="¿Qué estás buscando hoy?"
-          class="flex-1 h-10 md:h-12 bg-transparent text-sm text-gray-700 pl-5 pr-2 focus:outline-none placeholder-gray-400"
+          class="flex-1 min-w-0 h-10 md:h-12 bg-transparent text-sm text-gray-700 pl-5 pr-2 focus:outline-none placeholder-gray-400"
         />
         <button
           type="submit"

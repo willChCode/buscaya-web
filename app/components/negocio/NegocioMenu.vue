@@ -3,13 +3,13 @@
     class="flex flex-col bg-gray-50 rounded-2xl border border-gray-100 relative"
   >
     <div
-      class="p-4 px-6 md:px-4 border-b border-gray-200 bg-white sticky top-0 z-10 rounded-t-2xl"
+      class="p-4 px-3.5 md:px-5 border-b border-gray-200 bg-white sticky top-0 z-10 rounded-t-2xl"
     >
       <h3 class="font-bold text-lg text-gray-800">Menú y Productos</h3>
       <p class="text-xs text-gray-400">Selecciona para ver detalles</p>
     </div>
 
-    <div class="flex-1 p-4 px-6 md:px-4 lg:pb-[100px]">
+    <div class="flex-1 p-4 px-3.5 md:px-5 lg:pb-[100px]">
       <div
         v-if="!negocio.productos || negocio.productos.length === 0"
         class="text-center py-10 text-gray-400"

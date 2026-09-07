@@ -148,19 +148,16 @@ const scrollTo = (index: number) => {
       >
         {{ negocio.nombre?.charAt(0).toUpperCase() + negocio.nombre?.slice(1) }}
       </h2>
-      <!-- Categoria, Grupo y Badges (Modalidad) en una sola línea -->
-      <div
-        class="flex items-center justify-between gap-3 flex-wrap w-full -mt-3"
-      >
-        <div
-          class="flex items-center gap-1.5 text-sm text-gray-500 font-medium"
-        >
-          <span v-if="negocio.grupo">{{ negocio.grupo }}</span>
-          <span v-if="negocio.grupo && negocio.categoria">•</span>
-          <span v-if="negocio.categoria">{{ negocio.categoria }}</span>
-        </div>
+      <!-- Categoria, Grupo -->
+      <div class="flex items-center gap-1.5 text-sm text-gray-500 font-medium w-full -mt-2">
+        <span v-if="negocio.grupo">{{ negocio.grupo }}</span>
+        <span v-if="negocio.grupo && negocio.categoria">•</span>
+        <span v-if="negocio.categoria">{{ negocio.categoria }}</span>
+      </div>
 
-        <div class="flex items-center gap-2">
+      <!-- Badges (Modalidad) y Redes Sociales (Móvil) -->
+      <div class="flex items-center flex-wrap justify-start gap-3 w-full mt-1">
+        <div v-if="negocio.modalidad && (negocio.modalidad.includes('local') || negocio.modalidad.includes('domicilio'))" class="flex items-center flex-wrap gap-2">
           <div
             v-if="negocio.modalidad && negocio.modalidad.includes('local')"
             class="bg-primary-900 text-white shadow-sm px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5"
@@ -183,7 +180,7 @@ const scrollTo = (index: number) => {
           </div>
           <div
             v-if="negocio.modalidad && negocio.modalidad.includes('domicilio')"
-            class="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5"
+            class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -196,11 +193,27 @@ const scrollTo = (index: number) => {
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M13 10V3L4 14h7v7l9-11h-7z"
+                d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2M9 17h6M7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"
               />
             </svg>
             A domicilio
           </div>
+        </div>
+
+        <!-- Redes Sociales (Solo Móvil - Tamaño mini) -->
+        <div class="flex items-center gap-1.5 md:hidden">
+            <a v-if="negocio.contacto?.facebook" :href="negocio.contacto.facebook" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-[#1877F2] text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+            </a>
+            <a v-if="negocio.contacto?.instagram" :href="negocio.contacto.instagram" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a v-if="negocio.contacto?.tiktok" :href="negocio.contacto.tiktok" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-black text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 2.23-1.15 4.39-2.92 5.61-1.77 1.22-4.05 1.5-6.08.75-2.03-.74-3.61-2.43-4.2-4.48-.59-2.05-.2-4.291 1.07-5.981 1.27-1.691 3.32-2.611 5.4-2.521V14.3c-1.391-.07-2.771.55-3.561 1.66-.8 1.11-.96 2.63-.39 3.86.57 1.23 1.83 2.1 3.19 2.2 1.36.1 2.76-.44 3.55-1.54.79-1.1.96-2.59.88-3.95V.02h-1.02Z"/></svg>
+            </a>
+            <a v-if="negocio.contacto?.pagina_web || negocio.contacto?.web" :href="negocio.contacto.pagina_web || negocio.contacto.web" target="_blank" class="w-6 h-6 flex items-center justify-center rounded-full bg-slate-700 text-white">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>
+            </a>
         </div>
       </div>
 

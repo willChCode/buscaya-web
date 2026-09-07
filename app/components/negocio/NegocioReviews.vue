@@ -3,7 +3,7 @@
     class="flex flex-col bg-gray-50 rounded-2xl border border-gray-100 relative"
   >
     <div
-      class="p-4 px-6 md:px-4 border-b border-gray-200 bg-white sticky top-0 z-10 flex flex-col rounded-t-2xl"
+      class="p-4 px-3.5 md:px-5 border-b border-gray-200 bg-white sticky top-0 z-10 flex flex-col rounded-t-2xl"
     >
       <h3 class="font-bold text-lg text-gray-800">Opiniones</h3>
       <div class="flex items-end gap-3 mt-1">
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div class="flex-1 p-4 px-6 md:px-4 lg:pb-[100px]">
+    <div class="flex-1 p-4 px-3.5 md:px-5 lg:pb-[100px]">
       <div class="mb-5">
         <button
           @click="$emit('write-review')"

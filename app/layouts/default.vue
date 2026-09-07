@@ -1,20 +1,38 @@
 <template>
   <!-- Top Marquee Banner -->
-  <div class="bg-primary-950 text-white overflow-hidden py-2 border-b border-primary-900/50 z-[60] relative flex items-center w-full">
-    <div class="marquee-content flex gap-6 text-[11px] md:text-xs font-medium tracking-wide items-center whitespace-nowrap">
+  <div
+    class="bg-primary-950 text-white overflow-hidden py-2 border-b border-primary-900/50 z-[60] relative flex items-center w-full"
+  >
+    <div
+      class="marquee-content flex gap-6 text-[11px] md:text-xs font-medium tracking-wide items-center whitespace-nowrap"
+    >
       <!-- First set -->
-      <span class="flex items-center gap-2">✨ La mejor plataforma para encontrar cualquier negocio cerca de ti</span>
+      <span class="flex items-center gap-2"
+        >✨ La mejor plataforma para encontrar cualquier negocio cerca de
+        ti</span
+      >
       <span class="text-primary-700 select-none">|</span>
-      <span class="flex items-center gap-2">🚀 Regístrate y publica tu negocio 100% GRATIS</span>
+      <span class="flex items-center gap-2"
+        >🚀 Regístrate y publica tu negocio 100% GRATIS</span
+      >
       <span class="text-primary-700 select-none">|</span>
-      <span class="flex items-center gap-2">🌟 Explora miles de opciones locales al instante</span>
+      <span class="flex items-center gap-2"
+        >🌟 Explora miles de opciones locales al instante</span
+      >
       <span class="text-primary-700 select-none">|</span>
       <!-- Second set (Duplicated for seamless loop) -->
-      <span class="flex items-center gap-2">✨ La mejor plataforma para encontrar cualquier negocio cerca de ti</span>
+      <span class="flex items-center gap-2"
+        >✨ La mejor plataforma para encontrar cualquier negocio cerca de
+        ti</span
+      >
       <span class="text-primary-700 select-none">|</span>
-      <span class="flex items-center gap-2">🚀 Regístrate y publica tu negocio 100% GRATIS</span>
+      <span class="flex items-center gap-2"
+        >🚀 Regístrate y publica tu negocio 100% GRATIS</span
+      >
       <span class="text-primary-700 select-none">|</span>
-      <span class="flex items-center gap-2">🌟 Explora miles de opciones locales al instante</span>
+      <span class="flex items-center gap-2"
+        >🌟 Explora miles de opciones locales al instante</span
+      >
       <span class="text-primary-700 select-none">|</span>
     </div>
   </div>
@@ -31,11 +49,15 @@
       <!-- Search Bar is next -->
 
       <!-- Logo Mobile (Left) -->
-      <NuxtLink to="/" class="flex items-center gap-2 group mr-4 md:mr-8">
+      <NuxtLink
+        to="/"
+        class="flex items-center justify-center shrink-0 w-[35px] h-[35px] mr-2 md:mr-8"
+      >
         <img
-          src="~/assets/images/logo/logo-navegador.png"
+          src="~/assets/images/logo/logo-simbolo.svg"
           alt="Buscaya"
-          class="h-[50px] w-auto object-contain"
+          class="w-full h-full object-contain"
+          style="max-width: 44px; max-height: 44px"
         />
       </NuxtLink>
 
@@ -62,8 +84,10 @@
             type="text"
             placeholder="Comida, restaurante..."
             v-model="searchQuery"
+            @click="handleMobileSearchClick"
             @keyup.enter="handleSearch"
-            class="w-full h-full bg-transparent text-sm text-gray-700 pl-2 pr-20 focus:outline-none placeholder-gray-400"
+            class="w-full h-full bg-transparent text-sm text-gray-700 pl-2 focus:outline-none placeholder-gray-400"
+            :class="searchQuery ? 'pr-20' : 'pr-10'"
           />
           <button
             v-if="searchQuery"
@@ -358,10 +382,7 @@
           @click="handleSearch"
           class="absolute right-0 h-full w-12 bg-primary-500 flex items-center justify-center hover:bg-primary-700 transition duration-150"
         >
-          <Icon
-            name="ion:search"
-            class="h-5 w-5 text-white"
-          />
+          <Icon name="ion:search" class="h-5 w-5 text-white" />
         </button>
       </div>
     </div>
@@ -432,7 +453,10 @@
     </div>
   </nav>
 
-  <main class="min-h-[calc(100vh-110px)] flex flex-col" :class="route.meta.paddingClass || 'px-3 md:px-6'">
+  <main
+    class="min-h-[calc(100vh-110px)] flex flex-col"
+    :class="route.meta.paddingClass || 'px-3 md:px-6'"
+  >
     <slot />
   </main>
 
@@ -553,8 +577,19 @@
             <div
               class="text-gray-900 group-hover:text-primary-500 transition-colors"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                />
               </svg>
             </div>
             <span
@@ -883,7 +918,7 @@ const confirmarDireccion = async () => {
 
   showLocationModal.value = false;
 
-    // Optional: Auto redirect to home/search after login
+  // Optional: Auto redirect to home/search after login
   if (route.path !== '/') {
     router.push('/');
   }

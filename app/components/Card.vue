@@ -97,7 +97,7 @@ const maxDiscount = computed(() => {
       <!-- Top Row: Category and Price -->
       <div class="flex items-center justify-between mb-1">
         <span
-          class="text-[11px] font-semibold text-[#2d7a5d] uppercase truncate pr-2"
+          class="text-[11.5px] font-semibold text-[#2d7a5d] uppercase truncate pr-2"
         >
           {{ negocio.categoria || 'Categoría' }}
         </span>
@@ -113,7 +113,7 @@ const maxDiscount = computed(() => {
 
       <!-- Title -->
       <h3
-        class="font-bold text-[#1a2639] leading-tight truncate mb-1"
+        class="font-bold md:font-medium text-[#1a2639] leading-tight truncate mb-1"
         :class="compactMode ? 'text-[15px] md:text-[17px]' : 'text-[17px]'"
       >
         {{ negocio.nombre?.charAt(0).toUpperCase() + negocio.nombre?.slice(1) }}
@@ -142,13 +142,12 @@ const maxDiscount = computed(() => {
         </div>
 
         <!-- Ver detalles -->
-        <div
-          class="flex items-center text-[12px] font-medium text-[#3b4c68] hover:text-green-600 transition-colors"
-        >
-          <span>Ver detalles</span>
+        <div class="flex items-center text-[13px] font-bold text-primary-900 hover:text-primary-800 transition-colors">
+          <span class="md:hidden">Ver</span>
+          <span class="hidden md:inline">Ver detalles</span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-3.5 w-3.5 ml-1"
+            class="h-4 w-4 ml-1"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

@@ -79,7 +79,12 @@ export default defineNuxtConfig({
         { name: 'twitter:image', content: 'https://buscaya.mx/seo-buscaya.jpg' },
         { name: 'twitter:card', content: 'summary_large_image' }
       ],
-      link: [{ rel: 'icon', type: 'image/png', href: '/logo-navegador.png' }],
+      link: [
+        { rel: 'icon', type: 'image/png', sizes: '48x48', href: '/favicon-48x48.png' },
+        { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicon-96x96.png' },
+        { rel: 'icon', type: 'image/png', sizes: '144x144', href: '/favicon-144x144.png' },
+        { rel: 'icon', type: 'image/png', sizes: '192x192', href: '/favicon-192x192.png' },
+      ],
     },
   },
   devServer: {

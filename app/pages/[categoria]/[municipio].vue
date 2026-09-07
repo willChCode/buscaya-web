@@ -101,12 +101,19 @@ const openBusiness = (negocio) => {
 };
 
 // SEO Tags
-useSeoMeta({
+const seoMeta = {
   title: `Mejores ${categoria.nombrePlural} en ${municipio.nombre} | Buscaya`,
   description: `Encuentra y contacta a los mejores especialistas en ${categoria.nombrePlural.toLowerCase()} ubicados en ${municipio.nombre}. Revisa sus valoraciones y horarios en Buscaya.`,
   ogTitle: `Mejores ${categoria.nombrePlural} en ${municipio.nombre} | Buscaya`,
   ogDescription: `Descubre los mejores negocios de ${categoria.nombrePlural.toLowerCase()} en ${municipio.nombre}. Opiniones reales de clientes.`,
-});
+};
+
+// Si no hay negocios, le decimos a Google que no indexe esta página (evita penalización por thin content)
+if (negocios.value.length === 0) {
+  seoMeta.robots = 'noindex, follow';
+}
+
+useSeoMeta(seoMeta);
 
 // JSON-LD (Datos Estructurados para Rich Snippets en Google)
 if (negocios.value.length > 0) {

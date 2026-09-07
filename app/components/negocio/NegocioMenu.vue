@@ -74,9 +74,9 @@
 
     <!-- Modal del Producto -->
     <Dialog v-model="showProductModal" widthClass="w-11/12 max-w-sm mx-auto">
-      <div v-if="selectedProduct" class="p-6 flex flex-col gap-5">
+      <div v-if="selectedProduct" class="flex flex-col">
         <div
-          class="w-full aspect-square bg-gray-100 rounded-2xl overflow-hidden shrink-0 shadow-inner"
+          class="w-full aspect-square bg-gray-100 rounded-t-xl overflow-hidden shrink-0 shadow-inner"
         >
           <img
             :src="
@@ -88,50 +88,52 @@
             alt="producto"
           />
         </div>
-        <div>
-          <h4 class="font-bold text-gray-900 text-xl">
-            {{ selectedProduct.nombre }}
-          </h4>
-          <div
-            class="mt-1 text-primary-500 font-bold text-2xl flex items-center gap-3"
-          >
-            <template v-if="selectedProduct.precioOferta">
-              <span class="line-through text-gray-400 text-lg"
-                >${{ selectedProduct.precio }}</span
-              >
-              <span>${{ selectedProduct.precioOferta }}</span>
-              <span
-                class="bg-red-100 text-red-600 text-sm px-2 py-0.5 rounded-lg border border-red-200"
-              >
-                -{{
-                  Math.round(
-                    (1 -
-                      selectedProduct.precioOferta / selectedProduct.precio) *
-                      100
-                  )
-                }}%
-              </span>
-            </template>
-            <template v-else>
-              {{
-                Number(selectedProduct.precio) === 0
-                  ? 'Gratis'
-                  : `$${selectedProduct.precio}`
-              }}
-            </template>
+        <div class="p-6 flex flex-col gap-5">
+          <div>
+            <h4 class="font-bold text-gray-900 text-xl">
+              {{ selectedProduct.nombre }}
+            </h4>
+            <div
+              class="mt-1 text-primary-500 font-bold text-2xl flex items-center gap-3"
+            >
+              <template v-if="selectedProduct.precioOferta">
+                <span class="line-through text-gray-400 text-lg"
+                  >${{ selectedProduct.precio }}</span
+                >
+                <span>${{ selectedProduct.precioOferta }}</span>
+                <span
+                  class="bg-red-100 text-red-600 text-sm px-2 py-0.5 rounded-lg border border-red-200"
+                >
+                  -{{
+                    Math.round(
+                      (1 -
+                        selectedProduct.precioOferta / selectedProduct.precio) *
+                        100
+                    )
+                  }}%
+                </span>
+              </template>
+              <template v-else>
+                {{
+                  Number(selectedProduct.precio) === 0
+                    ? 'Gratis'
+                    : `$${selectedProduct.precio}`
+                }}
+              </template>
+            </div>
+            <p
+              class="text-sm text-gray-600 mt-4 whitespace-pre-wrap leading-relaxed"
+            >
+              {{ selectedProduct.descripcion }}
+            </p>
           </div>
-          <p
-            class="text-sm text-gray-600 mt-4 whitespace-pre-wrap leading-relaxed"
+          <button
+            @click="showProductModal = false"
+            class="w-full py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors mt-2"
           >
-            {{ selectedProduct.descripcion }}
-          </p>
+            Cerrar
+          </button>
         </div>
-        <button
-          @click="showProductModal = false"
-          class="w-full py-3.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors mt-2"
-        >
-          Cerrar
-        </button>
       </div>
     </Dialog>
   </div>

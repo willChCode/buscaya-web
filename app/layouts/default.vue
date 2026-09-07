@@ -51,13 +51,13 @@
       <!-- Logo Mobile (Left) -->
       <NuxtLink
         to="/"
-        class="flex items-center justify-center shrink-0 w-[35px] h-[35px] mr-2 md:mr-8"
+        class="flex items-center justify-center shrink-0 mr-2 md:mr-8"
       >
         <img
           src="~/assets/images/logo/logo-simbolo.svg"
           alt="Buscaya"
           class="w-full h-full object-contain"
-          style="max-width: 44px; max-height: 44px"
+          style="max-width: 40px; max-height: 40px"
         />
       </NuxtLink>
 
@@ -320,7 +320,7 @@
       <div class="h-6 border-r border-gray-200"></div>
       <div
         @click="showLocationModal = true"
-        class="flex gap-1 items-center text-sm font-semibold text-primary-500 cursor-pointer hover:text-primary-700 select-none"
+        class="flex gap-1 items-center text-sm font-medium text-primary-500 cursor-pointer hover:text-primary-700 select-none"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

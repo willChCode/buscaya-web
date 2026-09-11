@@ -922,12 +922,9 @@ const confirmarDireccion = async () => {
 
   showLocationModal.value = false;
 
-  // Si veníamos de una redirección, volvemos a esa URL
+  // Si veníamos de una redirección (legacy), volvemos a esa URL
   if (route.query.redirect) {
     router.push(route.query.redirect);
-  } else if (route.path !== '/') {
-    // Optional: Auto redirect to home/search after login
-    router.push('/');
   }
 };
 

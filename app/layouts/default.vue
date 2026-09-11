@@ -427,11 +427,15 @@
           @click="handleAuthAction"
           class="flex items-center text-gray-700 hover:text-primary-500 transition duration-150"
         >
-          <Icon
+          <svg
             v-if="!authStore.user"
-            name="ion:person-outline"
+            xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5 mr-1"
-          />
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 00-13.074.003z" />
+          </svg>
           <img
             v-else
             :src="
@@ -918,8 +922,11 @@ const confirmarDireccion = async () => {
 
   showLocationModal.value = false;
 
-  // Optional: Auto redirect to home/search after login
-  if (route.path !== '/') {
+  // Si veníamos de una redirección, volvemos a esa URL
+  if (route.query.redirect) {
+    router.push(route.query.redirect);
+  } else if (route.path !== '/') {
+    // Optional: Auto redirect to home/search after login
     router.push('/');
   }
 };
@@ -935,6 +942,20 @@ watch(showLocationModal, (val) => {
     }, 300);
   }
 });
+
+watch(
+  () => store.ubicacion,
+  (newVal) => {
+    if (newVal && newVal.direccion && showLocationModal.value) {
+      showLocationModal.value = false;
+      
+      if (route.query.redirect) {
+        router.push(route.query.redirect);
+      }
+    }
+  },
+  { deep: true }
+);
 
 onMounted(async () => {
   await authStore.initialize(); // Check cookies

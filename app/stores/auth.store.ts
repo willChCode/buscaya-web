@@ -24,6 +24,33 @@ interface AuthState {
   loading: boolean;
 }
 
+const COOKIE_OPTIONS = {
+  maxAge: 60 * 60 * 24 * 7, // 7 days
+  path: '/',
+  sameSite: 'lax' as const,
+};
+
+const parseUserCookie = (cookieVal: any): User | null => {
+  if (!cookieVal) return null;
+  if (typeof cookieVal === 'object' && cookieVal !== null && (cookieVal.uid || cookieVal.email)) {
+    return cookieVal as User;
+  }
+  if (typeof cookieVal === 'string') {
+    try {
+      let parsed = JSON.parse(cookieVal);
+      if (typeof parsed === 'string') {
+        parsed = JSON.parse(parsed);
+      }
+      if (parsed && typeof parsed === 'object' && (parsed.uid || parsed.email)) {
+        return parsed as User;
+      }
+    } catch (e) {
+      console.error('Error al parsear user_session cookie:', e);
+    }
+  }
+  return null;
+};
+
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     user: null,
@@ -31,11 +58,55 @@ export const useAuthStore = defineStore('auth', {
   }),
   actions: {
     async initialize() {
-      const tokenCookie = useCookie('auth_token');
-      const userCookie = useCookie<User>('user_session');
+      const tokenCookie = useCookie<string | null>('auth_token', { path: '/' });
+      const userCookie = useCookie<any>('user_session', { path: '/' });
 
-      if (tokenCookie.value && userCookie.value) {
-        this.user = userCookie.value;
+      if (tokenCookie.value) {
+        // 1. Restaurar del cookie inmediatamente para evitar flicker
+        const cachedUser = parseUserCookie(userCookie.value);
+        if (cachedUser) {
+          this.user = cachedUser;
+          // Normalizar el cookie si estaba como string
+          if (typeof userCookie.value === 'string') {
+            userCookie.value = cachedUser;
+          }
+        }
+
+        // 2. Sincronizar con el backend para tener los datos más actualizados y validar el token
+        try {
+          const config = useRuntimeConfig();
+          const API_BASE = config.public.apiBase;
+          const data: any = await $fetch(`${API_BASE}/users/profile`, {
+            headers: {
+              Authorization: `Bearer ${tokenCookie.value}`,
+            },
+          });
+
+          if (data && data._id) {
+            const freshUser: User = {
+              uid: data._id,
+              email: data.correo,
+              displayName: data.nombre || data.correo?.split('@')[0] || 'Usuario',
+              photoURL: data.image?.url || data.foto,
+              birthDate: data.fechanacimineto,
+              image: data.image,
+              ubicacion: data.ubicacion,
+              token: tokenCookie.value,
+            };
+            this.user = freshUser;
+            userCookie.value = freshUser;
+          }
+        } catch (err: any) {
+          if (err?.status === 401 || err?.statusCode === 401 || err?.status === 403 || err?.statusCode === 403) {
+            console.warn('Token expirado o inválido, limpiando sesión.');
+            this.user = null;
+            tokenCookie.value = null;
+            userCookie.value = null;
+          }
+        }
+      } else {
+        this.user = null;
+        userCookie.value = null;
       }
     },
 
@@ -50,7 +121,7 @@ export const useAuthStore = defineStore('auth', {
           body: {
             correo: email,
             contrasena: pass,
-            tokenCloudfare: captchaToken || 'skipped-for-now', // TODO: Implement Cloudflare Turnstile if needed
+            tokenCloudfare: captchaToken || 'skipped-for-now',
           },
         });
 
@@ -67,12 +138,11 @@ export const useAuthStore = defineStore('auth', {
           token: access_token,
         };
 
-        // Persist using Nuxt Cookies
-        const tokenCookie = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 7 }); // 7 days
-        const userCookie = useCookie('user_session', { maxAge: 60 * 60 * 24 * 7 });
+        const tokenCookie = useCookie('auth_token', COOKIE_OPTIONS);
+        const userCookie = useCookie('user_session', COOKIE_OPTIONS);
 
         tokenCookie.value = access_token;
-        userCookie.value = JSON.stringify(user);
+        userCookie.value = user;
 
         this.user = user;
       } catch (error: any) {
@@ -104,7 +174,7 @@ export const useAuthStore = defineStore('auth', {
         });
 
         const { access_token } = response;
-        const data = response; // Sometimes register returns different structure, adjusting based on mobile
+        const data = response;
 
         const user: User = {
           uid: data._id,
@@ -117,11 +187,11 @@ export const useAuthStore = defineStore('auth', {
           token: access_token,
         };
 
-        const tokenCookie = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 7 });
-        const userCookie = useCookie('user_session', { maxAge: 60 * 60 * 24 * 7 });
+        const tokenCookie = useCookie('auth_token', COOKIE_OPTIONS);
+        const userCookie = useCookie('user_session', COOKIE_OPTIONS);
 
         tokenCookie.value = access_token;
-        userCookie.value = JSON.stringify(user);
+        userCookie.value = user;
 
         this.user = user;
       } catch (error: any) {
@@ -137,8 +207,8 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout() {
-      const tokenCookie = useCookie('auth_token');
-      const userCookie = useCookie('user_session');
+      const tokenCookie = useCookie('auth_token', { path: '/' });
+      const userCookie = useCookie('user_session', { path: '/' });
 
       tokenCookie.value = null;
       userCookie.value = null;
@@ -214,8 +284,8 @@ export const useAuthStore = defineStore('auth', {
 
              this.user = updatedUser;
              // Update cookie
-             const userCookie = useCookie('user_session', { maxAge: 60 * 60 * 24 * 7 });
-             userCookie.value = JSON.stringify(this.user);
+             const userCookie = useCookie('user_session', COOKIE_OPTIONS);
+             userCookie.value = this.user;
         }
 
         return this.user;
@@ -274,11 +344,11 @@ export const useAuthStore = defineStore('auth', {
           token: access_token,
         };
 
-        const tokenCookie = useCookie('auth_token', { maxAge: 60 * 60 * 24 * 7 });
-        const userCookie = useCookie('user_session', { maxAge: 60 * 60 * 24 * 7 });
+        const tokenCookie = useCookie('auth_token', COOKIE_OPTIONS);
+        const userCookie = useCookie('user_session', COOKIE_OPTIONS);
 
         tokenCookie.value = access_token;
-        userCookie.value = JSON.stringify(user);
+        userCookie.value = user;
 
         this.user = user;
       } catch (error: any) {

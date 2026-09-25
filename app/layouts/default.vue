@@ -289,15 +289,16 @@
             v-else
             :src="
               authStore.user?.photoURL ||
-              'https://ui-avatars.com/api/?name=' + authStore.user?.displayName
+              'https://ui-avatars.com/api/?name=' +
+                encodeURIComponent(authStore.user?.displayName || 'Usuario')
             "
-            class="h-8 w-8 rounded-full mr-3 border border-gray-200"
+            class="h-8 w-8 rounded-full mr-3 border border-gray-200 object-cover"
             alt="Avatar"
           />
           <span class="font-medium text-lg">
             {{
               authStore.user
-                ? truncateName(authStore.user.displayName)
+                ? truncateName(authStore.user.displayName || 'Usuario')
                 : 'Ingreso'
             }}
           </span>
@@ -440,15 +441,16 @@
             v-else
             :src="
               authStore.user?.photoURL ||
-              'https://ui-avatars.com/api/?name=' + authStore.user?.displayName
+              'https://ui-avatars.com/api/?name=' +
+                encodeURIComponent(authStore.user?.displayName || 'Usuario')
             "
-            class="h-8 w-8 rounded-full mr-2 border border-gray-200"
+            class="h-8 w-8 rounded-full mr-2 border border-gray-200 object-cover"
             alt="Avatar"
           />
           <span class="font-medium">
             {{
               authStore.user
-                ? truncateName(authStore.user.displayName)
+                ? truncateName(authStore.user.displayName || 'Usuario')
                 : 'Ingreso'
             }}
           </span>

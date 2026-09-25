@@ -169,7 +169,7 @@
 
               <!-- WhatsApp -->
               <a
-                :href="`https://wa.me/52${negocio.contacto?.whatsapp}`"
+                :href="whatsappUrl"
                 target="_blank"
                 class="flex-1 md:flex-none md:px-8 h-12 flex items-center justify-center gap-2 rounded-xl bg-[#00d072] text-white font-bold hover:bg-[#00b563] active:scale-95 transition-all shadow-sm cursor-pointer"
               >
@@ -194,11 +194,26 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue';
+
+const props = defineProps<{
   negocio: any;
 }>();
 
 defineEmits(['rate']);
+
+const whatsappUrl = computed(() => {
+  const phone = props.negocio?.contacto?.whatsapp;
+  if (!phone) return '#';
+  const cleanPhone = String(phone).replace(/\D/g, '');
+  if (!cleanPhone) return '#';
+  const fullPhone = cleanPhone.length === 10 ? `52${cleanPhone}` : cleanPhone;
+  const nombre = props.negocio?.nombre ? ` ${props.negocio.nombre}` : '';
+  const msg = encodeURIComponent(
+    `Hola, vengo de BuscaYa, me gustaría más información sobre${nombre}.`
+  );
+  return `https://wa.me/${fullPhone}?text=${msg}`;
+});
 
 const abrirMapa = (coordinates: number[]) => {
   if (!coordinates || coordinates.length < 2) return;

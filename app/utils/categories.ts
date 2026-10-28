@@ -19,7 +19,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Servicios Profesionales",
     icono: "briefcase",
-    imagen: "/categorias/profesionistas.png",
+    imagen: "/categorias/profesionistas.webp",
     subcategorias: [
       { nombre: "Abogado", icono: "briefcase-outline" },
       { nombre: "Contador", icono: "calculator-outline" },
@@ -35,9 +35,10 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Salud y Medicina",
     icono: "medkit",
-    imagen: "/categorias/Salud.png",
+    imagen: "/categorias/Salud.webp",
     subcategorias: [
       { nombre: "Dentista", icono: "medkit-outline" },
+      { nombre: "Dermatólogo", icono: "body-outline" },
       { nombre: "Médico General", icono: "fitness-outline" },
       { nombre: "Pediatra", icono: "happy-outline" },
       { nombre: "Ginecólogo", icono: "woman-outline" },
@@ -50,7 +51,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Comida y Bebida",
     icono: "restaurant",
-    imagen: "/categorias/Comida.png",
+    imagen: "/categorias/Comida.webp",
     subcategorias: [
       { nombre: "Tacos", icono: "restaurant-outline" },
       { nombre: "Hamburguesas", icono: "fast-food-outline" },
@@ -67,7 +68,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Comercio Local",
     icono: "storefront",
-    imagen: "/categorias/Tiendas.png",
+    imagen: "/categorias/Tiendas.webp",
     subcategorias: [
       { nombre: "Abarrotes", icono: "basket-outline" },
       { nombre: "Carnicería", icono: "restaurant-outline" },
@@ -84,7 +85,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Mascotas y Veterinaria",
     icono: "paw",
-    imagen: "/categorias/Mascotas.png",
+    imagen: "/categorias/Mascotas.webp",
     subcategorias: [
       { nombre: "Veterinaria", icono: "paw-outline" },
       { nombre: "Estética Canina", icono: "cut-outline" },
@@ -96,7 +97,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Moda y Estilo",
     icono: "shirt",
-    imagen: "/categorias/ropa.png",
+    imagen: "/categorias/ropa.webp",
     subcategorias: [
       { nombre: "Ropa", icono: "shirt-outline" },
       { nombre: "Calzado", icono: "walk-outline" },
@@ -109,7 +110,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Tecnología y Oficina",
     icono: "laptop",
-    imagen: "/categorias/papelerias.png",
+    imagen: "/categorias/papelerias.webp",
     subcategorias: [
       { nombre: "Computación", icono: "desktop-outline" },
       { nombre: "Celulares", icono: "phone-portrait-outline" },
@@ -122,7 +123,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Viajes y Hospedaje",
     icono: "airplane",
-    imagen: "/categorias/Hospedajes.png",
+    imagen: "/categorias/Hospedajes.webp",
     subcategorias: [
       { nombre: "Hotel", icono: "bed-outline" },
       { nombre: "Airbnb", icono: "home-outline" },
@@ -135,7 +136,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Mundo Automotriz",
     icono: "car",
-    imagen: "/categorias/Mecanico.png",
+    imagen: "/categorias/Mecanico.webp",
     subcategorias: [
       { nombre: "Mecánico", icono: "car-sport-outline" },
       { nombre: "Llantas", icono: "disc-outline" },
@@ -149,10 +150,11 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Servicios Técnicos",
     icono: "construct",
-    imagen: "/categorias/Hogar.png",
+    imagen: "/categorias/Hogar.webp",
     subcategorias: [
       { nombre: "Plomero", icono: "water-outline" },
       { nombre: "Electricista", icono: "flash-outline" },
+      { nombre: "Albañil", icono: "cube-outline" },
       { nombre: "Carpintero", icono: "hammer-outline" },
       { nombre: "Pintor", icono: "color-fill-outline" },
       { nombre: "Climas", icono: "snow-outline" },
@@ -166,7 +168,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Estética y Belleza",
     icono: "cut",
-    imagen: "/categorias/Belleza.png",
+    imagen: "/categorias/Belleza.webp",
     subcategorias: [
       { nombre: "Barbería", icono: "cut-outline" },
       { nombre: "Estética", icono: "color-wand-outline" },
@@ -180,7 +182,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Eventos y Fiestas",
     icono: "calendar",
-    imagen: "/categorias/Eventos.png",
+    imagen: "/categorias/Eventos.webp",
     subcategorias: [
       { nombre: "Salón de Eventos", icono: "storefront-outline" },
       { nombre: "Pastelería", icono: "fast-food-outline" },
@@ -194,7 +196,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Finanzas y Seguros",
     icono: "wallet",
-    imagen: "/categorias/bancos.png",
+    imagen: "/categorias/bancos.webp",
     subcategorias: [
       { nombre: "Caja de Ahorro", icono: "wallet-outline" },
       { nombre: "Seguros", icono: "shield-checkmark-outline" },
@@ -206,7 +208,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Fitness y Deportes",
     icono: "barbell",
-    imagen: "/categorias/deportes.png",
+    imagen: "/categorias/deportes.webp",
     subcategorias: [
       { nombre: "Gimnasio", icono: "barbell-outline" },
       { nombre: "Crossfit", icono: "bicycle-outline" },
@@ -219,7 +221,7 @@ export const GRUPOS_CATEGORIAS_UNIFICADOS: GrupoCategoria[] = [
   {
     nombre: "Hogar y Muebles",
     icono: "home",
-    imagen: "/categorias/muebles.png",
+    imagen: "/categorias/muebles.webp",
     subcategorias: [
       { nombre: "Mueblería", icono: "bed-outline" },
       { nombre: "Decoración", icono: "color-palette-outline" },

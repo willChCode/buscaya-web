@@ -144,6 +144,47 @@
                   </NuxtLink>
 
                   <NuxtLink
+                    to="/perfil/mi-negocio"
+                    class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    exact-active-class="text-gray-900 bg-white border-l-4 border-primary-500 lg:border-l-0 lg:ring-1 lg:ring-gray-200 shadow-sm"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500"
+                      :class="{
+                        'text-primary-500': $route.path === '/perfil/mi-negocio',
+                      }"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M3 9l1.5-5h15L21 9M3 9v11h18V9M3 9h18M9 20v-6h6v6"
+                      />
+                    </svg>
+                    Mi negocio
+                    <span class="ml-auto lg:hidden">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 text-gray-300"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 5l7 7-7 7"
+                        />
+                      </svg>
+                    </span>
+                  </NuxtLink>
+
+                  <NuxtLink
                     to="/perfil/publicaciones"
                     class="group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                     exact-active-class="text-gray-900 bg-white border-l-4 border-primary-500 lg:border-l-0 lg:ring-1 lg:ring-gray-200 shadow-sm"

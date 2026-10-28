@@ -30,4 +30,9 @@
 definePageMeta({
   layout: 'default'
 })
+
+useSeoMeta({
+  title: 'Política de Privacidad | BuscaYa',
+  description: 'Conoce cómo BuscaYa recopila, usa y protege tus datos personales.',
+})
 </script>

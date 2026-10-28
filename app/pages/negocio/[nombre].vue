@@ -3,26 +3,15 @@
     class="bg-gray-50 pb-20 pt-4 md:pt-8 lg:pb-0 lg:h-[calc(100vh-110px)] lg:overflow-hidden lg:flex lg:flex-col"
   >
     <div class="px-3 md:px-8 w-full flex-1 min-h-0 flex flex-col">
-      <!-- Loading State -->
-      <div
-        v-if="loading"
-        class="flex flex-col items-center justify-center py-20"
-      >
-        <div
-          class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"
-        ></div>
-        <p class="mt-4 text-gray-500 font-medium">Cargando negocio...</p>
-      </div>
-
       <!-- Error State -->
       <div
-        v-else-if="error"
+        v-if="error"
         class="bg-red-50 text-red-500 p-6 rounded-2xl text-center"
       >
         <p class="font-bold text-lg">No se pudo cargar el negocio</p>
-        <p class="text-sm mt-2">{{ error }}</p>
-        <button @click="goBack" class="mt-4 text-primary-600 underline">
-          Volver al inicio
+        <p class="text-sm mt-2">{{ error.statusMessage || error.message }}</p>
+        <button @click="refresh()" class="mt-4 text-primary-600 underline">
+          Reintentar
         </button>
       </div>
 
@@ -39,6 +28,27 @@
           <NegocioLocation :negocio="negocio" />
           <NegocioHours :negocio="negocio" />
           <NegocioContact :negocio="negocio" @rate="handleRate" />
+
+          <!-- Reclamar negocio (solo si aún no tiene dueño) -->
+          <div
+            v-if="!negocio.tieneDueno"
+            class="mt-4 bg-primary-50 border border-primary-100 rounded-2xl p-4 flex items-center gap-3"
+          >
+            <div class="flex-1">
+              <p class="font-bold text-gray-800 text-sm">¿Es tu negocio?</p>
+              <p class="text-xs text-gray-500 mt-0.5">
+                Reclámalo gratis para editar tu información y ver cuántas personas te visitan.
+              </p>
+            </div>
+            <a
+              :href="urlReclamar"
+              target="_blank"
+              rel="noopener"
+              class="shrink-0 bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold px-4 py-2 rounded-xl transition-colors"
+            >
+              Reclamar
+            </a>
+          </div>
         </div>
 
         <!-- Columna Central: Menú -->
@@ -204,9 +214,10 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '~/stores/auth.store';
 import { obtenerNegocioPorId, registrarVisita } from '~/services/negocio';
+import { urlNegocio, extraerIdDeSlug, SITE_URL } from '~/utils/helpers';
+import { negocioVisible, schemaLocalBusiness } from '~/utils/seo-negocio';
 import Dialog from '~/components/Dialog.vue';
 import NegocioHeader from '~/components/negocio/NegocioHeader.vue';
 import NegocioContact from '~/components/negocio/NegocioContact.vue';
@@ -218,50 +229,92 @@ import LoginModal from '~/components/auth/LoginModal.vue';
 import { useNegocioReviews } from '~/composables/useNegocioReviews';
 
 const route = useRoute();
-const router = useRouter();
 const authStore = useAuthStore();
 
 definePageMeta({
   paddingClass: 'p-0',
 });
 
-const negocio = ref(null);
-const loading = ref(true);
-const error = ref(null);
+// URLs antiguas: /negocio/<slug>?id=<id>  →  /negocio/<slug>-<id>
+const idLegacy = typeof route.query.id === 'string' ? route.query.id : null;
+const id = extraerIdDeSlug(route.params.nombre) || idLegacy;
 
-const fetchNegocio = async () => {
-  const id = route.query.id;
-  if (!id) {
-    error.value = 'No se proporcionó un ID válido.';
-    loading.value = false;
-    return;
+if (!id) {
+  throw createError({ statusCode: 404, statusMessage: 'Negocio no encontrado', fatal: true });
+}
+
+const tokenCookie = useCookie('auth_token');
+
+const { data: negocio, error, refresh } = await useAsyncData(
+  `negocio-${id}`,
+  () => obtenerNegocioPorId(id, tokenCookie.value),
+  {
+    // No mandamos al HTML los datos del dueño (nombre/correo), solo si existe
+    transform: (n) => {
+      if (!n) return n;
+      const { usuarioId, ...resto } = n;
+      return { ...resto, tieneDueno: !!usuarioId };
+    },
   }
+);
 
-  try {
-    loading.value = true;
-    negocio.value = await obtenerNegocioPorId(id);
+if (error.value?.statusCode === 404) {
+  throw createError({ statusCode: 404, statusMessage: 'Negocio no encontrado', fatal: true });
+}
 
-    // Configurar SEO
-    useSeoMeta({
-      title: `${negocio.value?.nombre} - Buscaya`,
-      description:
-        negocio.value?.descripcion ||
-        `Descubre ${negocio.value?.nombre} en Buscaya`,
-    });
+// Redirección 301 si la URL no es la canónica (slug viejo, ?id=, nombre cambiado)
+if (negocio.value) {
+  const canonica = urlNegocio(negocio.value);
+  if (route.path !== canonica || idLegacy) {
+    await navigateTo(canonica, { redirectCode: 301, replace: true });
+  }
+}
 
-    // Registrar visita
-    registrarVisita(id).catch((err) =>
+// --- SEO ---
+const urlCanonica = computed(() => negocio.value ? `${SITE_URL}${urlNegocio(negocio.value)}` : undefined);
+const descripcionSeo = computed(() => {
+  const n = negocio.value;
+  if (!n) return '';
+  if (n.descripcion) return n.descripcion.slice(0, 160);
+  return `${n.nombre}: ${n.categoria || 'negocio local'}${n.colonia ? ` en ${n.colonia}` : ''}. Consulta horarios, teléfono, ubicación y reseñas en Buscaya.`;
+});
+
+useSeoMeta({
+  title: () => negocio.value ? `${negocio.value.nombre} - ${negocio.value.categoria || 'Negocio'} | Buscaya` : 'Buscaya',
+  description: descripcionSeo,
+  ogTitle: () => negocio.value?.nombre,
+  ogDescription: descripcionSeo,
+  ogImage: () => negocio.value?.portada?.url || `${SITE_URL}/seo-buscaya.jpg`,
+  ogUrl: urlCanonica,
+  ogType: 'website',
+  // Negocio con "derecho de piso" vencido: la ficha se ve, pero Google no la indexa
+  robots: () => (negocio.value && !negocioVisible(negocio.value) ? 'noindex, follow' : undefined),
+});
+
+useHead({
+  link: () => urlCanonica.value ? [{ rel: 'canonical', href: urlCanonica.value }] : [],
+  script: () => negocio.value
+    ? [{ type: 'application/ld+json', innerHTML: JSON.stringify(schemaLocalBusiness(negocio.value)) }]
+    : [],
+});
+
+// Botón "Reclamar": abre WhatsApp de Buscaya con los datos del negocio
+const WHATSAPP_BUSCAYA = '528110720923';
+const urlReclamar = computed(() => {
+  const n = negocio.value;
+  if (!n) return '#';
+  const correo = authStore.user?.email ? ` Mi correo en Buscaya es ${authStore.user.email}.` : '';
+  const texto = `Hola, soy el dueño de "${n.nombre}" (ID ${n._id}) y quiero reclamar mi negocio en Buscaya.${correo}`;
+  return `https://wa.me/${WHATSAPP_BUSCAYA}?text=${encodeURIComponent(texto)}`;
+});
+
+// La visita se cuenta solo en el navegador (no en SSR ni bots)
+onMounted(() => {
+  if (negocio.value?._id) {
+    registrarVisita(negocio.value._id).catch((err) =>
       console.error('Error tracking visit:', err)
     );
-  } catch (err) {
-    error.value = err.message || 'Error al cargar el negocio.';
-  } finally {
-    loading.value = false;
   }
-};
-
-onMounted(() => {
-  fetchNegocio();
 });
 
 const showLoginModal = ref(false);

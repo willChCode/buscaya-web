@@ -215,6 +215,16 @@ const authStore = useAuthStore();
 
 const postId = route.params.id as string;
 const post = computed(() => store.currentPost);
+
+useSeoMeta({
+  title: () =>
+    post.value?.content
+      ? `${post.value.content.slice(0, 55)}${post.value.content.length > 55 ? '…' : ''} | Comunidad BuscaYa`
+      : 'Publicación | Comunidad BuscaYa',
+  description: () =>
+    post.value?.content?.slice(0, 160) ||
+    'Lee opiniones y recomendaciones de negocios locales en la comunidad de BuscaYa.',
+});
 const loading = computed(() => store.loading);
 
 const commentText = ref('');

@@ -23,6 +23,7 @@
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
+    "@iconify-json/ion": "^1.2.7",
     "@nuxt/icon": "^2.5.0",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/sitemap": "^8.3.4",

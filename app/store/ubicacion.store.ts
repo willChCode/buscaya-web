@@ -37,11 +37,12 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
     // Separated state for Home Page (Unfiltered)
     negociosHome: [] as Negocio[],
     totalNegociosHome: 0,
+    ultimaCargaHome: 0,
 
     lastFilterQuery: null as any,
   }),
   persist: {
-    debug: true,
+    debug: false,
   },
 
   getters: {},
@@ -175,8 +176,14 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
     async fetchHomeNegocios(force = false) {
       if (!this.ubicacion || typeof this.ubicacion.lat === 'undefined') return;
 
-      // Simple cache check specific to home? For now let's reuse logic or just simple check
-      if (!force && this.negociosHome.length > 0) return;
+      // Cache de 2 minutos (igual que actualizarDatos); sin vencimiento se quedaba
+      // para siempre con lo guardado en localStorage
+      const expiracion = 2 * 60 * 1000;
+      if (
+        !force &&
+        this.negociosHome.length > 0 &&
+        Date.now() - this.ultimaCargaHome < expiracion
+      ) return;
 
       this.cargando = true;
       try {
@@ -202,6 +209,7 @@ export const useUbicacionNegocios = defineStore('ubicacionNegocios', {
 
         this.negociosHome = res.data;
         this.totalNegociosHome = res.meta.total;
+        this.ultimaCargaHome = Date.now();
       } catch (e) {
         console.error('Error fetching home negocios:', e);
       } finally {

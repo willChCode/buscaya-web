@@ -15,7 +15,7 @@
           <div
             class="lg:col-span-4 flex flex-col gap-0 lg:overflow-y-auto lg:pr-4 lg:h-full"
           >
-            <NegocioHeader :negocio="negocio" />
+            <NegocioHeader :negocio="negocio" tituloTag="h2" />
             <NegocioLocation :negocio="negocio" />
             <NegocioHours :negocio="negocio" />
             <NegocioContact :negocio="negocio" @rate="handleRate" />

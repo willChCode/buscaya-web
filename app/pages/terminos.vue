@@ -30,4 +30,9 @@
 definePageMeta({
   layout: 'default'
 })
+
+useSeoMeta({
+  title: 'Términos y Condiciones | BuscaYa',
+  description: 'Consulta los términos y condiciones de uso de BuscaYa, el directorio de negocios locales en México.',
+})
 </script>

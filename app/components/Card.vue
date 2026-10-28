@@ -2,6 +2,7 @@
 import type { Negocio } from '@/interfaces/negocio.type';
 import { obtenerEstadoNegocio } from '@/utils/horarios';
 import { computed } from 'vue';
+import { urlNegocio, imagenOptimizada } from '@/utils/helpers';
 
 import { useSettingsStore } from '@/stores/settings.store';
 
@@ -44,14 +45,17 @@ const maxDiscount = computed(() => {
 </script>
 
 <template>
-  <div
-    class="flex-shrink-0 cursor-pointer bg-white rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+  <NuxtLink
+    :to="urlNegocio(negocio)"
+    class="block flex-shrink-0 cursor-pointer bg-white rounded-xl border border-gray-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     :class="fullWidth ? 'w-full' : 'w-[285px]'"
   >
     <div class="relative overflow-hidden rounded-t-xl">
       <img
-        :src="negocio?.portada?.url || 'https://placehold.co/600x400'"
+        :src="imagenOptimizada(negocio?.portada?.url, 480) || 'https://placehold.co/600x400'"
         :alt="negocio?.nombre"
+        loading="lazy"
+        decoding="async"
         :class="compactMode ? 'h-[130px] md:h-[155px]' : 'h-[155px]'"
         class="w-full object-cover bg-gray-100 transition-transform duration-500 hover:scale-105"
       />
@@ -162,5 +166,5 @@ const maxDiscount = computed(() => {
         </div>
       </div>
     </div>
-  </div>
+  </NuxtLink>
 </template>

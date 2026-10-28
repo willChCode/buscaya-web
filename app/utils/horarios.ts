@@ -8,6 +8,26 @@ export const diasSemana = [
   'sabado',
 ];
 
+// Hora local de México: el SSR corre en UTC y el navegador en hora local,
+// así que fijamos la zona para que servidor y cliente coincidan.
+const ZONA_HORARIA = 'America/Monterrey';
+
+const ahoraEnMexico = () => {
+  const partes = new Intl.DateTimeFormat('en-US', {
+    timeZone: ZONA_HORARIA,
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date());
+  const valor = (tipo: string) => partes.find((p) => p.type === tipo)?.value || '';
+  const dias = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  return {
+    dia: dias.indexOf(valor('weekday')),
+    minutos: Number(valor('hour')) * 60 + Number(valor('minute')),
+  };
+};
+
 export const obtenerEstadoNegocio = (horarios: any) => {
   if (!horarios)
     return {
@@ -17,9 +37,9 @@ export const obtenerEstadoNegocio = (horarios: any) => {
       textoColor: 'text-gray-700',
     };
 
-  const ahora = new Date();
-  const diaHoy = diasSemana[ahora.getDay()];
-  const horaActual = ahora.getHours() * 60 + ahora.getMinutes();
+  const ahora = ahoraEnMexico();
+  const diaHoy = diasSemana[ahora.dia];
+  const horaActual = ahora.minutos;
 
   //@ts-ignore
   const rangosHoy = horarios[diaHoy] || [];

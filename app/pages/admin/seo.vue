@@ -166,8 +166,11 @@ import { SEOCategorias, SEOMunicipios } from '~/utils/seo-data';
 
 // Usamos el layout default
 definePageMeta({
-  layout: 'default'
+  layout: 'default',
+  middleware: ['auth'],
 });
+
+useSeoMeta({ robots: 'noindex, nofollow' });
 
 const searchQuery = ref('');
 const selectedCategory = ref('');

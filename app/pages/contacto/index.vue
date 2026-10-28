@@ -6,6 +6,14 @@ definePageMeta({
   layout: false,
 });
 
+useSeoMeta({
+  title: 'Registra tu negocio en BuscaYa | Contacto',
+  description:
+    'Publica tu negocio en BuscaYa y llega a más clientes cerca de ti. Escríbenos y te ayudamos a registrarlo.',
+  ogTitle: 'Registra tu negocio en BuscaYa',
+  ogImage: 'https://buscaya.mx/seo-buscaya.jpg',
+});
+
 const router = useRouter();
 
 const form = ref({

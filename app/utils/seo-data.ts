@@ -3,6 +3,7 @@ export interface SEOMunicipio {
   slug: string;
   lat: number;
   lon: number;
+  alias?: string[]; // Otras formas en que aparece en las direcciones de Google
 }
 
 export interface SEOCategoria {
@@ -13,18 +14,21 @@ export interface SEOCategoria {
   term: string;         // Término de búsqueda que se envía al backend para filtrar la base de datos
 }
 
+// URLs por cada sitemap de negocios (negocios.xml, negocios-2.xml…)
+export const NEGOCIOS_POR_SITEMAP = 5000;
+
 export const SEOMunicipios: SEOMunicipio[] = [
   { nombre: 'Monterrey', slug: 'monterrey', lat: 25.6866, lon: -100.3161 },
   { nombre: 'Apodaca', slug: 'apodaca', lat: 25.7820, lon: -100.1889 },
-  { nombre: 'San Pedro Garza García', slug: 'san-pedro-garza-garcia', lat: 25.6575, lon: -100.4021 },
-  { nombre: 'San Nicolás de los Garza', slug: 'san-nicolas-de-los-garza', lat: 25.7485, lon: -100.2884 },
+  { nombre: 'San Pedro Garza García', slug: 'san-pedro-garza-garcia', lat: 25.6575, lon: -100.4021, alias: ['San Pedro', 'Garza García'] },
+  { nombre: 'San Nicolás de los Garza', slug: 'san-nicolas-de-los-garza', lat: 25.7485, lon: -100.2884, alias: ['San Nicolás'] },
   { nombre: 'Guadalupe', slug: 'guadalupe', lat: 25.6791, lon: -100.2588 },
   { nombre: 'Santa Catarina', slug: 'santa-catarina', lat: 25.6738, lon: -100.4627 },
-  { nombre: 'General Escobedo', slug: 'escobedo', lat: 25.7997, lon: -100.3204 },
+  { nombre: 'General Escobedo', slug: 'escobedo', lat: 25.7997, lon: -100.3204, alias: ['Escobedo', 'Gral. Escobedo'] },
   { nombre: 'Juárez', slug: 'juarez', lat: 25.6473, lon: -100.0963 },
-  { nombre: 'García', slug: 'garcia', lat: 25.8118, lon: -100.5960 },
-  { nombre: 'Santiago', slug: 'santiago', lat: 25.4243, lon: -100.1504 },
-  { nombre: 'Cadereyta Jiménez', slug: 'cadereyta', lat: 25.5901, lon: -100.0033 },
+  { nombre: 'García', slug: 'garcia', lat: 25.8118, lon: -100.5960, alias: ['Villa de García'] },
+  { nombre: 'Santiago', slug: 'santiago', lat: 25.4243, lon: -100.1504, alias: ['Villa de Santiago'] },
+  { nombre: 'Cadereyta Jiménez', slug: 'cadereyta', lat: 25.5901, lon: -100.0033, alias: ['Cadereyta'] },
   { nombre: 'Salinas Victoria', slug: 'salinas-victoria', lat: 25.9610, lon: -100.2872 },
 ];
 

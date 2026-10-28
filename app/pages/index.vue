@@ -24,12 +24,14 @@
     <div class="mt-6 md:mt-4">
       <CarouselSection
         title="Negocios cerca de ti"
-        :count="store.totalNegociosHome"
+        :count="montado ? store.totalNegociosHome : 0"
         linkTo="/negocios"
         linkText="Ver todos"
         @link-click="handleClearFilters"
       >
-        <template v-if="store.cargando">
+        <!-- En el servidor no conocemos la ubicación: mostramos esqueletos
+             (no "No hay negocios") hasta que el navegador cargue la lista -->
+        <template v-if="store.cargando || !montado">
           <BusinessSkeleton
             v-for="n in 5"
             :key="n"
@@ -73,14 +75,13 @@
             :negocio="negocio"
             class="animate-fade-in-up"
             :style="{ animationDelay: `${idx * 60}ms` }"
-            @click="openBusiness(negocio)"
           />
         </template>
       </CarouselSection>
     </div>
 
     <!-- PROMOCIONES -->
-    <div class="mt-6 mb-12">
+    <div class="mt-6">
       <CarouselSection
         title="Nuestras promociones"
         linkTo="/revista"
@@ -95,6 +96,46 @@
         />
       </CarouselSection>
     </div>
+
+    <!-- BUSCA POR CATEGORÍA Y CIUDAD (enlaces fijos para usuarios y Google) -->
+    <section
+      v-if="destacados?.categorias?.length"
+      class="mt-8 mb-12 bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-6 md:px-8 md:py-8"
+    >
+      <h2 class="text-lg md:text-xl font-extrabold text-gray-900">
+        Busca por categoría y ciudad
+      </h2>
+      <p class="text-sm text-gray-500 mt-1">
+        Los mejores negocios de Nuevo León, con horarios, reseñas y contacto por WhatsApp.
+      </p>
+
+      <div class="flex flex-wrap gap-2 mt-5">
+        <NuxtLink
+          v-for="cat in destacados.categorias"
+          :key="cat.url"
+          :to="cat.url"
+          class="text-sm font-medium bg-primary-50 text-primary-700 hover:bg-primary-100 px-3.5 py-1.5 rounded-full transition-colors"
+        >
+          {{ cat.texto }}
+        </NuxtLink>
+      </div>
+
+      <div v-if="destacados.combinaciones.length" class="mt-6 pt-6 border-t border-gray-100">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">
+          Búsquedas populares
+        </h3>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-2">
+          <li v-for="combo in destacados.combinaciones" :key="combo.url">
+            <NuxtLink
+              :to="combo.url"
+              class="text-sm text-gray-600 hover:text-primary-600 transition-colors"
+            >
+              {{ combo.texto }}
+            </NuxtLink>
+          </li>
+        </ul>
+      </div>
+    </section>
 
   </div>
 
@@ -241,11 +282,20 @@ import CarouselSection from '~/components/CarouselSection.vue';
 import DrawerNegocio from '~/components/DrawerNegocio.vue';
 import BusinessSkeleton from '~/components/BusinessSkeleton.vue';
 import HeroBanner from '~/components/home/HeroBanner.vue';
-import { crearSlug } from '~/utils/helpers';
 
 // Remove default layout padding to allow full-width footer
 definePageMeta({
   paddingClass: 'p-0',
+});
+
+useSeoMeta({
+  title: 'BuscaYa — Directorio comercial de negocios en México',
+  description:
+    'La sección amarilla digital más grande de México. Encuentra los mejores negocios, servicios y productos locales cerca de ti con BuscaYa.',
+  ogTitle: 'BuscaYa — Directorio comercial de negocios en México',
+  ogDescription:
+    'Encuentra negocios, servicios y productos locales cerca de ti: horarios, reseñas y contacto directo por WhatsApp.',
+  ogImage: 'https://buscaya.mx/seo-buscaya.jpg',
 });
 
 const getCardComponent = (negocio) => {
@@ -258,15 +308,15 @@ const getCardComponent = (negocio) => {
 
 const selectedNegocio = ref(null);
 const isOpen = ref(false);
-const router = useRouter();
 const store = useUbicacionNegocios();
 const showLocationModal = useState('showLocationModal', () => false);
 
-const openBusiness = (negocio) => {
-  const slug = crearSlug(negocio.nombre);
-  const id = negocio._id || negocio.id;
-  router.push({ path: `/negocio/${slug}`, query: { id } });
-};
+// Enlaces a páginas de categoría y categoría × ciudad (se arman en el servidor)
+const { data: destacados } = await useFetch('/api/seo/destacados', { key: 'seo-destacados' });
+
+// false en el servidor y durante la hidratación; true ya en el navegador
+const montado = ref(false);
+
 
 const handleClearFilters = () => {
   // Limpiamos la categoría para que al ir a resultados muestre "Todos"
@@ -274,6 +324,7 @@ const handleClearFilters = () => {
 };
 
 onMounted(() => {
+  montado.value = true;
   if (!store.ubicacion || !store.ubicacion.direccion) {
     showLocationModal.value = true;
   } else {
@@ -285,30 +336,30 @@ const grupos = [
   {
     id: 1,
     nombre: 'Servicios Profesionales',
-    imagen: '/categorias/profesionistas.png',
+    imagen: '/categorias/profesionistas.webp',
   },
-  { id: 2, nombre: 'Salud y Medicina', imagen: '/categorias/Salud.png' },
-  { id: 3, nombre: 'Comida y Bebida', imagen: '/categorias/Comida.png' },
-  { id: 4, nombre: 'Comercio Local', imagen: '/categorias/Tiendas.png' },
+  { id: 2, nombre: 'Salud y Medicina', imagen: '/categorias/Salud.webp' },
+  { id: 3, nombre: 'Comida y Bebida', imagen: '/categorias/Comida.webp' },
+  { id: 4, nombre: 'Comercio Local', imagen: '/categorias/Tiendas.webp' },
   {
     id: 5,
     nombre: 'Mascotas y Veterinaria',
-    imagen: '/categorias/Mascotas.png',
+    imagen: '/categorias/Mascotas.webp',
   },
-  { id: 6, nombre: 'Moda y Estilo', imagen: '/categorias/ropa.png' },
+  { id: 6, nombre: 'Moda y Estilo', imagen: '/categorias/ropa.webp' },
   {
     id: 7,
     nombre: 'Tecnología y Oficina',
-    imagen: '/categorias/papelerias.png',
+    imagen: '/categorias/papelerias.webp',
   },
-  { id: 8, nombre: 'Viajes y Hospedaje', imagen: '/categorias/Hospedajes.png' },
-  { id: 9, nombre: 'Mundo Automotriz', imagen: '/categorias/Mecanico.png' },
-  { id: 10, nombre: 'Servicios Técnicos', imagen: '/categorias/Hogar.png' },
-  { id: 11, nombre: 'Estética y Belleza', imagen: '/categorias/Belleza.png' },
-  { id: 12, nombre: 'Eventos y Fiestas', imagen: '/categorias/Eventos.png' },
-  { id: 13, nombre: 'Finanzas y Seguros', imagen: '/categorias/bancos.png' },
-  { id: 14, nombre: 'Fitness y Deportes', imagen: '/categorias/deportes.png' },
-  { id: 15, nombre: 'Hogar y Muebles', imagen: '/categorias/muebles.png' },
+  { id: 8, nombre: 'Viajes y Hospedaje', imagen: '/categorias/Hospedajes.webp' },
+  { id: 9, nombre: 'Mundo Automotriz', imagen: '/categorias/Mecanico.webp' },
+  { id: 10, nombre: 'Servicios Técnicos', imagen: '/categorias/Hogar.webp' },
+  { id: 11, nombre: 'Estética y Belleza', imagen: '/categorias/Belleza.webp' },
+  { id: 12, nombre: 'Eventos y Fiestas', imagen: '/categorias/Eventos.webp' },
+  { id: 13, nombre: 'Finanzas y Seguros', imagen: '/categorias/bancos.webp' },
+  { id: 14, nombre: 'Fitness y Deportes', imagen: '/categorias/deportes.webp' },
+  { id: 15, nombre: 'Hogar y Muebles', imagen: '/categorias/muebles.webp' },
 ];
 const promos = [
   {

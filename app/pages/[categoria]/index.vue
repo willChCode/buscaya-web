@@ -31,12 +31,15 @@
 
 <script setup>
 import { SEOMunicipios, SEOCategorias } from '~/utils/seo-data';
-import { useRoute, createError, useSeoMeta } from '#imports';
+import { useRoute, createError, useSeoMeta, useHead, useFetch } from '#imports';
+import { SITE_URL } from '~/utils/helpers';
 
 const route = useRoute();
 const categoriaSlug = route.params.categoria;
 
-const categoria = SEOCategorias.find(c => c.slug === categoriaSlug);
+// Categorías fijas + las que salen de los negocios registrados
+const { data: categorias } = await useFetch('/api/seo/categorias', { key: 'seo-categorias' });
+const categoria = (categorias.value || SEOCategorias).find(c => c.slug === categoriaSlug);
 
 if (!categoria) {
   throw createError({ statusCode: 404, statusMessage: 'Categoría no encontrada', fatal: true });
@@ -46,5 +49,9 @@ if (!categoria) {
 useSeoMeta({
   title: `${categoria.nombrePlural} en Nuevo León | Buscaya`,
   description: `Encuentra a los mejores especialistas en ${categoria.nombrePlural.toLowerCase()} en Nuevo León. Selecciona tu ciudad para ver horarios, reseñas y contactar negocios en Buscaya.`,
+});
+
+useHead({
+  link: [{ rel: 'canonical', href: `${SITE_URL}/${categoria.slug}` }],
 });
 </script>

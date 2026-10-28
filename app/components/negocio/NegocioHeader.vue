@@ -2,10 +2,16 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { obtenerEstadoNegocio } from '@/utils/horarios';
+import { imagenOptimizada } from '@/utils/helpers';
 
-const props = defineProps<{
-  negocio: any;
-}>();
+const props = withDefaults(
+  defineProps<{
+    negocio: any;
+    // h1 en la ficha del negocio; h2 cuando se muestra dentro de otra página (drawer)
+    tituloTag?: 'h1' | 'h2';
+  }>(),
+  { tituloTag: 'h1' }
+);
 
 const router = useRouter();
 const goBack = () => {
@@ -70,9 +76,10 @@ const scrollTo = (index: number) => {
           class="w-full h-auto lg:h-full shrink-0 snap-center relative"
         >
           <img
-            :src="img.url || 'https://placehold.co/600x400?text=Sin+Imagen'"
+            :src="imagenOptimizada(img.url, 1000) || 'https://placehold.co/600x400?text=Sin+Imagen'"
             class="w-full h-auto lg:h-full object-cover"
-            alt="Imagen del negocio"
+            :alt="idx === 0 ? negocio.nombre : `${negocio.nombre} - foto ${idx + 1}`"
+            :loading="idx === 0 ? 'eager' : 'lazy'"
           />
         </div>
       </div>
@@ -129,9 +136,10 @@ const scrollTo = (index: number) => {
         "
       >
         <img
-          :src="img.url || img"
+          :src="imagenOptimizada(img.url || img, 160)"
           class="w-full h-full object-cover"
-          alt="miniatura"
+          :alt="`${negocio.nombre} - miniatura ${idx + 1}`"
+          loading="lazy"
         />
         <div
           v-if="activeIndex !== idx"
@@ -143,11 +151,12 @@ const scrollTo = (index: number) => {
     <!-- External Info -->
     <div class="shrink-0 mb-3 flex flex-col gap-3 mt-4">
       <!-- Title -->
-      <h2
+      <component
+        :is="tituloTag"
         class="text-xl md:text-2xl font-bold leading-tight tracking-tight text-gray-800"
       >
         {{ negocio.nombre?.charAt(0).toUpperCase() + negocio.nombre?.slice(1) }}
-      </h2>
+      </component>
       <!-- Categoria, Grupo -->
       <div class="flex items-center gap-1.5 text-sm text-gray-500 font-medium w-full -mt-2">
         <span v-if="negocio.grupo">{{ negocio.grupo }}</span>

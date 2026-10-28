@@ -4,7 +4,8 @@
     :class="showSearch ? 'pt-12 pb-32 md:pt-14 md:pb-40' : 'py-8 md:py-12'"
   >
     <img
-      src="~/assets/images/banner/fondo-buscaya.jpg"
+      src="~/assets/images/banner/fondo-buscaya.webp"
+      fetchpriority="high"
       alt="Fondo Buscaya"
       class="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
     />

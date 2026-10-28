@@ -106,22 +106,25 @@ export async function agregarResena(
 }
 
 /**
- * Obtiene los negocios de un usuario específico.
- * Endpoint: GET /negocios/usuario/:id
+ * Obtiene los negocios del usuario logueado.
+ * El backend guarda el negocio vinculado en el perfil (users.negocioId),
+ * así que leemos GET /users/profile y luego el negocio.
  */
-export async function obtenerMisNegocios(userId: string): Promise<Negocio[]> {
+export async function obtenerMisNegocios(token: string): Promise<Negocio[]> {
   const config = useRuntimeConfig();
   const API_BASE = config.public.apiBase;
 
-  const res = await fetch(`${API_BASE}/negocios/usuario/${userId}`);
+  const res = await fetch(`${API_BASE}/users/profile`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 
   if (!res.ok) {
     throw new Error('Error cargando mis negocios');
   }
 
-  const data = await res.json();
-  // Adjust based on backend response structure (likely similar to obtenerNegociosCercanos)
-  return (data.data || data) as Negocio[];
+  const perfil = await res.json();
+  const ids = [perfil.negocioId].flat().filter(Boolean).map((n: any) => n._id || n);
+  return Promise.all(ids.map((id: string) => obtenerNegocioPorId(id, token)));
 }
 /**
  * Registra una visita a un negocio para métricas.
@@ -157,18 +160,76 @@ export async function registrarVisita(negocioId: string): Promise<{ ok: boolean 
 /**
  * Obtiene un negocio por su ID.
  * Endpoint: GET /negocios/:id
+ * Funciona en SSR; el token es opcional (para registrar actividad del usuario).
  */
-export async function obtenerNegocioPorId(id: string): Promise<Negocio> {
+export async function obtenerNegocioPorId(id: string, token?: string | null): Promise<Negocio> {
   const config = useRuntimeConfig();
   const API_BASE = config.public.apiBase;
-  
+
   const url = `${API_BASE}/negocios/${id}`;
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+  });
 
   if (!res.ok) {
-    throw new Error('Error al cargar el negocio');
+    throw createError({
+      statusCode: res.status === 404 || res.status === 400 ? 404 : 500,
+      statusMessage: res.status === 404 || res.status === 400
+        ? 'Negocio no encontrado'
+        : 'Error al cargar el negocio',
+    });
   }
 
   const data = await res.json();
   return data.negocio || data.data || data;
+}
+
+/**
+ * Obtiene las métricas anuales de un negocio (visitas, clics a WhatsApp y teléfono).
+ * Endpoint: GET /metricas/:negocioId
+ */
+export async function obtenerMetricasNegocio(negocioId: string, anio?: number): Promise<any> {
+  const config = useRuntimeConfig();
+  const API_BASE = config.public.apiBase;
+
+  const params = anio ? `?anio=${anio}` : '';
+  const res = await fetch(`${API_BASE}/metricas/${negocioId}${params}`);
+
+  if (!res.ok) {
+    throw new Error('Error cargando métricas');
+  }
+
+  return res.json();
+}
+
+/**
+ * Actualiza datos básicos de un negocio (descripción, contacto, horarios...).
+ * Endpoint: PUT /negocios/:id (multipart, igual que el dashboard)
+ */
+export async function actualizarNegocio(
+  id: string,
+  datos: Record<string, any>,
+  token: string
+): Promise<Negocio> {
+  const config = useRuntimeConfig();
+  const API_BASE = config.public.apiBase;
+
+  const form = new FormData();
+  for (const [key, value] of Object.entries(datos)) {
+    if (value === undefined) continue;
+    form.append(key, typeof value === 'object' ? JSON.stringify(value) : String(value));
+  }
+
+  const res = await fetch(`${API_BASE}/negocios/${id}`, {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${token}` },
+    body: form,
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => null);
+    throw new Error(errorData?.message || 'Error al guardar los cambios');
+  }
+
+  return res.json();
 }

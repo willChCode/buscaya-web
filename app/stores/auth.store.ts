@@ -111,6 +111,10 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async login(email: string, pass: string, captchaToken?: string) {
+      if (!captchaToken) {
+        throw new Error('Completa la verificación de seguridad para continuar');
+      }
+
       const config = useRuntimeConfig();
       const API_BASE = config.public.apiBase;
 
@@ -121,7 +125,7 @@ export const useAuthStore = defineStore('auth', {
           body: {
             correo: email,
             contrasena: pass,
-            tokenCloudfare: captchaToken || 'skipped-for-now',
+            tokenCloudfare: captchaToken,
           },
         });
 
@@ -158,6 +162,10 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async register(email: string, pass: string, name: string, captchaToken?: string) {
+      if (!captchaToken) {
+        throw new Error('Completa la verificación de seguridad para continuar');
+      }
+
       const config = useRuntimeConfig();
       const API_BASE = config.public.apiBase;
 
@@ -169,7 +177,7 @@ export const useAuthStore = defineStore('auth', {
             correo: email,
             contrasena: pass,
             nombre: name,
-            tokenCloudfare: captchaToken || 'skipped-for-now',
+            tokenCloudfare: captchaToken,
           },
         });
 
@@ -299,12 +307,12 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async fetchMyPublications() {
-       if (!this.user?.uid) return [];
+       if (!this.user?.token) return [];
        
        this.loading = true;
        try {
          const { obtenerMisNegocios } = await import('~/services/negocio');
-         const negocios = await obtenerMisNegocios(this.user.uid);
+         const negocios = await obtenerMisNegocios(this.user.token);
          return negocios;
        } catch (error: any) {
          console.error('Error fetching my publications:', error);

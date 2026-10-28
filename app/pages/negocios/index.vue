@@ -232,7 +232,6 @@
         fullWidth
         :compactMode="true"
         class="w-full mx-auto"
-        @click="openBusiness(negocio)"
       />
     </div>
 
@@ -302,7 +301,8 @@ definePageMeta({
 });
 
 useSeoMeta({
-  title: 'Directorio de Negocios y Empresas Locales en México | BuscaYa',
+  title: 'Buscar negocios cerca de ti | BuscaYa',
+  robots: 'noindex, follow',
   description:
     'Explora nuestro directorio de negocios y encuentra empresas, servicios profesionales, restaurantes y tiendas locales cerca de ti. ¡Descubre las mejores opciones en BuscaYa!',
   ogImage: 'https://buscaya.mx/seo-buscaya.jpg',
@@ -313,14 +313,6 @@ useSeoMeta({
 const isOpen = ref(false);
 const isFilterOpen = ref(false);
 
-// Función que llama el @click de la Card
-import { crearSlug } from '~/utils/helpers';
-
-const openBusiness = (negocio: any) => {
-  const slug = crearSlug(negocio.nombre);
-  const id = negocio._id || negocio.id;
-  router.push({ path: `/negocio/${slug}`, query: { id } });
-};
 
 // --- Helper: Normalización de Texto ---
 const limpiarTexto = (texto: any) => {
